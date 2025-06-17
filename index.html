@@ -227,7 +227,7 @@ frm.addEventListener('submit', async (e) => {
       const data = JSON.parse(txt);
       localStorage.setItem('token', data.token);
       localStorage.setItem('nivel', data.nivel);
-      window.location = data.precisaTrocar ? 'alterar-senha.html' : 'dashboard.html';
+      window.location = data.precisaTrocar ? 'alterar-senha.html' : 'infosys_dashboard.html';
     } else {
       msg.textContent = txt.replace(/_/g, ' ');
     }
