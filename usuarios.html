@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários - InfoSys</title>
+  <style>
+    :root {
+      --azul: #38b6ff;
+      --rosa: #eb0d9f;
+      --cinza-claro: #f9f9f9;
+      --cinza-borda: #ccc;
+      --cinza-texto: #333;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--cinza-claro);
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: var(--azul);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--cinza-borda);
+    }
+
+    th {
+      background-color: #e6f6ff;
+      color: var(--cinza-texto);
+    }
+
+    .acoes span {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 4px 8px;
+      background-color: #eee;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 300px;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      color: var(--azul);
+    }
+
+    .modal-content label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .modal-content select,
+    .modal-content button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .modal-content .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+
+    .modal-content .actions button {
+      width: 48%;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cancelar {
+      background-color: #ccc;
+    }
+
+    .salvar {
+      background-color: var(--azul);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Usuários Cadastrados</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>E-mail</th>
+          <th>Nível</th>
+          <th>Status</th>
+          <th>Último Login</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>william.tedesco@idealizesaude.com.br</td>
+          <td>MASTER</td>
+          <td>Ativo</td>
+          <td>16/06/2025 18:13</td>
+          <td class="acoes">
+            <span onclick="abrirModal('william.tedesco@idealizesaude.com.br')">✏️</span>
+            <span>🗑️</span>
+          </td>
+        </tr>
+        <tr>
+          <td>juliana.tedesco@idealizesaude.com.br</td>
+          <td>AVANCADO</td>
+          <td>Inativo</td>
+          <td>--</td>
+          <td class="acoes">
+            <span onclick="abrirModal('juliana.tedesco@idealizesaude.com.br')">✏️</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal" id="modal-edicao">
+    <div class="modal-content">
+      <h3>Editar Usuário</h3>
+      <label for="nivel">Nível</label>
+      <select id="modal-nivel">
+        <option>BASICO</option>
+        <option>INTERMEDIARIO</option>
+        <option>AVANCADO</option>
+        <option>MASTER</option>
+      </select>
+      <label for="status">Status</label>
+      <select id="modal-status">
+        <option>Ativo</option>
+        <option>Inativo</option>
+      </select>
+      <div class="actions">
+        <button class="cancelar" onclick="fecharModal()">Cancelar</button>
+        <button class="salvar" onclick="salvarAlteracoes()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModal(email) {
+      document.getElementById('modal-edicao').style.display = 'flex';
+      console.log('Editar usuário:', email);
+    }
+
+    function fecharModal() {
+      document.getElementById('modal-edicao').style.display = 'none';
+    }
+
+    function salvarAlteracoes() {
+      alert('Alterações salvas (simulado).');
+      fecharModal();
+    }
+  </script>
+</body>
+</html>
