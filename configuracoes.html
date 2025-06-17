@@ -2,55 +2,52 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configurações - InfoSys</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Configurações</title>
   <style>
-    :root {
-      --azul: #38b6ff;
-      --rosa: #eb0d9f;
-      --cinza-claro: #f9f9f9;
-      --cinza-borda: #ccc;
-    }
-
     body {
-      font-family: Arial, sans-serif;
-      background: var(--cinza-claro);
       margin: 0;
-      padding: 2rem;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      height: 100vh;
     }
 
     .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background-color: white;
+      margin-top: 40px;
       padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
     }
 
     h2 {
-      color: var(--azul);
+      color: #38b6ff;
+      text-align: left;
       margin-bottom: 1.5rem;
     }
 
-    .option-box {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .option-box a {
-      text-decoration: none;
-      background-color: var(--azul);
-      color: white;
+    .button {
+      display: block;
+      width: 100%;
       padding: 1rem;
-      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #38b6ff;
+      color: white;
       font-weight: bold;
-      text-align: center;
-      transition: background 0.3s ease;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    .option-box a:hover {
+    .button:hover {
       background-color: #2fa3e6;
     }
   </style>
@@ -58,10 +55,8 @@
 <body>
   <div class="container">
     <h2>Configurações de Acesso</h2>
-    <div class="option-box">
-      <a href="#">Usuários</a>
-      <a href="#">Cadastro de Usuários</a>
-    </div>
+    <button class="button" onclick="window.location.href='usuarios.html'">Usuários</button>
+    <button class="button" onclick="window.location.href='cadastro_usuarios.html'">Cadastro de Usuários</button>
   </div>
 </body>
 </html>
