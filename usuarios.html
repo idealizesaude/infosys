@@ -169,19 +169,19 @@
         dados.forEach(usuario => {
           const tr = document.createElement("tr");
 
-          let botoes = <span onclick="abrirModal('${usuario.email}')">✏️</span>;
+          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
 
           if (nivelAtual === "MASTER") {
-            botoes += <span onclick="excluirUsuario('${usuario.email}')">🗑️</span>;
+            botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
           }
 
-          tr.innerHTML = 
+          tr.innerHTML = `
             <td>${usuario.email}</td>
             <td>${usuario.nivel}</td>
             <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
             <td>${formatarData(usuario.ultimoLogin)}</td>
             <td class="acoes">${botoes}</td>
-          ;
+          `;
           corpo.appendChild(tr);
         });
 
@@ -195,7 +195,7 @@
       if (!valor) return "--";
       const d = new Date(valor);
       const pad = n => String(n).padStart(2, "0");
-      return ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())};
+      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
     function abrirModal(email) {
@@ -213,7 +213,7 @@
     }
 
     function excluirUsuario(email) {
-      alert(Excluir: ${email} (função ainda não implementada).);
+      alert(`Excluir: ${email} (função ainda não implementada).`);
     }
 
     carregarUsuarios();
