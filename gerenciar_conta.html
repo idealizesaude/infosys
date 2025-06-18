@@ -65,6 +65,19 @@
     button:hover {
       background: #2fa3e6;
     }
+
+    .mensagem {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .erro {
+      color: red;
+    }
+
+    .sucesso {
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -72,15 +85,54 @@
     <h2>Gerenciar Conta</h2>
 
     <label for="nome">Nome</label>
-    <input type="text" id="nome" value="JULIANA PEREIRA DA SILVA TEDESCO" />
+    <input type="text" id="nome" />
 
     <label for="email">E-mail</label>
-    <input type="email" id="email" class="readonly" value="juliana.tedesco@idealizesaude.com.br" readonly />
+    <input type="email" id="email" class="readonly" readonly />
 
-    <button onclick="alert('Alterações salvas!')">Atualizar Dados</button>
+    <button onclick="atualizarDados()">Atualizar Dados</button>
+    <div id="msg" class="mensagem"></div>
 
     <h2 style="margin-top: 2.5rem;">Acesso</h2>
     <button onclick="window.location.href='alterar-senha.html'">Alterar senha</button>
   </div>
-</body>
-</html>
+
+  <script>
+    const urlScript = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+    async function carregarDadosUsuario() {
+      const email = localStorage.getItem("email");
+      const nome = localStorage.getItem("nome");
+
+      document.getElementById("email").value = email || "";
+      document.getElementById("nome").value = nome || email?.split("@")[0] || "";
+    }
+
+    async function atualizarDados() {
+      const nome = document.getElementById("nome").value.trim();
+      const token = localStorage.getItem("token");
+
+      const msgDiv = document.getElementById("msg");
+      msgDiv.textContent = "";
+      msgDiv.className = "mensagem";
+
+      if (!nome) {
+        msgDiv.textContent = "O nome não pode estar vazio.";
+        msgDiv.classList.add("erro");
+        return;
+      }
+
+      try {
+        const res = await fetch(urlScript, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "atualizarNome",
+            token: token,
+            nome: nome
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "OK") {
+          localStorage.setItem("nome", nome);
