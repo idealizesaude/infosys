@@ -138,26 +138,8 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>william.tedesco@idealizesaude.com.br</td>
-          <td>MASTER</td>
-          <td>Ativo</td>
-          <td>16/06/2025 18:13</td>
-          <td class="acoes">
-            <span onclick="abrirModal('william.tedesco@idealizesaude.com.br')">✏️</span>
-            <span>🗑️</span>
-          </td>
-        </tr>
-        <tr>
-          <td>juliana.tedesco@idealizesaude.com.br</td>
-          <td>AVANCADO</td>
-          <td>Inativo</td>
-          <td>--</td>
-          <td class="acoes">
-            <span onclick="abrirModal('juliana.tedesco@idealizesaude.com.br')">✏️</span>
-          </td>
-        </tr>
+      <tbody id="tabela-usuarios">
+        <tr><td colspan="5">Carregando usuários...</td></tr>
       </tbody>
     </table>
   </div>
@@ -165,14 +147,14 @@
   <div class="modal" id="modal-edicao">
     <div class="modal-content">
       <h3>Editar Usuário</h3>
-      <label for="nivel">Nível</label>
+      <label for="modal-nivel">Nível</label>
       <select id="modal-nivel">
         <option>BASICO</option>
         <option>INTERMEDIARIO</option>
         <option>AVANCADO</option>
         <option>MASTER</option>
       </select>
-      <label for="status">Status</label>
+      <label for="modal-status">Status</label>
       <select id="modal-status">
         <option>Ativo</option>
         <option>Inativo</option>
@@ -185,6 +167,50 @@
   </div>
 
   <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec';
+
+    async function carregarUsuarios() {
+      try {
+        const res = await fetch(API_URL + '?action=lista', { method: 'POST' });
+        const dados = await res.json();
+
+        const corpo = document.getElementById('tabela-usuarios');
+        corpo.innerHTML = '';
+
+        if (dados.length === 0) {
+          corpo.innerHTML = '<tr><td colspan="5">Nenhum usuário encontrado.</td></tr>';
+          return;
+        }
+
+        dados.forEach(usuario => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${usuario.email}</td>
+            <td>${usuario.nivel}</td>
+            <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
+            <td>${formatarData(usuario.ultimoLogin)}</td>
+            <td class="acoes">
+              <span onclick="abrirModal('${usuario.email}')">✏️</span>
+              <span>🗑️</span>
+            </td>
+          `;
+          corpo.appendChild(tr);
+        });
+
+      } catch (erro) {
+        document.getElementById('tabela-usuarios').innerHTML = `
+          <tr><td colspan="5">Erro ao carregar dados.</td></tr>`;
+        console.error('Erro:', erro);
+      }
+    }
+
+    function formatarData(dataStr) {
+      if (!dataStr) return '--';
+      const data = new Date(dataStr);
+      if (isNaN(data)) return '--';
+      return data.toLocaleString('pt-BR');
+    }
+
     function abrirModal(email) {
       document.getElementById('modal-edicao').style.display = 'flex';
       console.log('Editar usuário:', email);
@@ -198,6 +224,9 @@
       alert('Alterações salvas (simulado).');
       fecharModal();
     }
+
+    // Carrega os dados ao abrir a página
+    carregarUsuarios();
   </script>
 </body>
 </html>
