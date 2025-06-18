@@ -170,7 +170,7 @@
       corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec?action=lista");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec?action=listar");
         const dados = await response.json();
         const nivelAtual = localStorage.getItem("nivel");
 
