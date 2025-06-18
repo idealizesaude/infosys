@@ -118,7 +118,7 @@
     <a href="#"><i class="fas fa-user-slash"></i> Clientes Indesejáveis</a>
     <a href="#"><i class="fas fa-sticky-note"></i> Anotações Importante</a>
     <a href="#"><i class="fas fa-file-alt"></i> Relatórios</a>
-    <a href="configuracoes.html"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#"><i class="fas fa-cogs"></i> Configurações</a>
   </aside>
 
   <div class="main">
@@ -151,11 +151,12 @@
       // Limpa os dados do login armazenados localmente
       localStorage.removeItem('token');
       localStorage.removeItem('nivel');
-    
+
       // Redireciona para a página de login
       window.location.href = 'index.html';
     }
-    
+
+    // Fecha o menu dropdown se clicar fora dele
     document.addEventListener("click", function(event) {
       const dropdown = document.getElementById("dropdown");
       const userMenu = document.querySelector(".user-menu");
