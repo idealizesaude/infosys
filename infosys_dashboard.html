@@ -131,7 +131,7 @@
         </div>
         <div class="user-dropdown" id="dropdown">
           <a href="gerenciar-conta.html">Gerenciar conta</a>
-          <a href="#">Sair</a>
+          <a href="#" onclick="logout()">Sair</a>
         </div>
       </div>
     </div>
@@ -147,6 +147,15 @@
       dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     }
 
+    function logout() {
+      // Limpa os dados do login armazenados localmente
+      localStorage.removeItem('token');
+      localStorage.removeItem('nivel');
+    
+      // Redireciona para a página de login
+      window.location.href = 'index.html';
+    }
+    
     document.addEventListener("click", function(event) {
       const dropdown = document.getElementById("dropdown");
       const userMenu = document.querySelector(".user-menu");
