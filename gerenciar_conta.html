@@ -65,19 +65,6 @@
     button:hover {
       background: #2fa3e6;
     }
-
-    .mensagem {
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    .erro {
-      color: red;
-    }
-
-    .sucesso {
-      color: green;
-    }
   </style>
 </head>
 <body>
@@ -90,49 +77,54 @@
     <label for="email">E-mail</label>
     <input type="email" id="email" class="readonly" readonly />
 
-    <button onclick="atualizarDados()">Atualizar Dados</button>
-    <div id="msg" class="mensagem"></div>
+    <button onclick="atualizarNome()">Atualizar Dados</button>
 
     <h2 style="margin-top: 2.5rem;">Acesso</h2>
     <button onclick="window.location.href='alterar-senha.html'">Alterar senha</button>
   </div>
 
   <script>
-    const urlScript = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+    const urlAPI = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
-    async function carregarDadosUsuario() {
-      const email = localStorage.getItem("email");
-      const nome = localStorage.getItem("nome");
+    const nomeInput = document.getElementById("nome");
+    const emailInput = document.getElementById("email");
 
-      document.getElementById("email").value = email || "";
-      document.getElementById("nome").value = nome || email?.split("@")[0] || "";
-    }
-
-    async function atualizarDados() {
-      const nome = document.getElementById("nome").value.trim();
+    async function carregarUsuario() {
       const token = localStorage.getItem("token");
-
-      const msgDiv = document.getElementById("msg");
-      msgDiv.textContent = "";
-      msgDiv.className = "mensagem";
-
-      if (!nome) {
-        msgDiv.textContent = "O nome não pode estar vazio.";
-        msgDiv.classList.add("erro");
-        return;
-      }
+      if (!token) return alert("Usuário não autenticado");
 
       try {
-        const res = await fetch(urlScript, {
-          method: "POST",
-          body: new URLSearchParams({
-            action: "atualizarNome",
-            token: token,
-            nome: nome
-          })
-        });
+        const res = await fetch(`${urlAPI}?action=getusuario&token=${token}`);
+        const user = await res.json();
+        nomeInput.value = user.nome || "";
+        emailInput.value = user.email || "";
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+        alert("Erro ao carregar dados do usuário.");
+      }
+    }
 
-        const data = await res.json();
+    async function atualizarNome() {
+      const token = localStorage.getItem("token");
+      const nome = nomeInput.value.trim();
 
-        if (data.status === "OK") {
-          localStorage.setItem("nome", nome);
+      if (!nome) return alert("Informe um nome válido.");
+
+      try {
+        const res = await fetch(`${urlAPI}?action=atualizarnome&token=${token}&nome=${encodeURIComponent(nome)}`);
+        const msg = await res.text();
+        if (msg === "OK") {
+          alert("Nome atualizado com sucesso!");
+        } else {
+          alert("Erro ao atualizar nome: " + msg);
+        }
+      } catch (e) {
+        console.error("Erro ao atualizar nome:", e);
+        alert("Erro ao atualizar nome.");
+      }
+    }
+
+    carregarUsuario();
+  </script>
+</body>
+</html>
