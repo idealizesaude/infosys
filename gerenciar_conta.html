@@ -84,42 +84,57 @@
   </div>
 
   <script>
-    const urlAPI = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
-
-    const nomeInput = document.getElementById("nome");
-    const emailInput = document.getElementById("email");
-
     async function carregarUsuario() {
       const token = localStorage.getItem("token");
-      if (!token) return alert("Usuário não autenticado");
+      if (!token) return alert("Usuário não autenticado.");
 
       try {
-        const res = await fetch(`${urlAPI}?action=getusuario&token=${token}`);
-        const user = await res.json();
-        nomeInput.value = user.nome || "";
-        emailInput.value = user.email || "";
-      } catch (e) {
-        console.error("Erro ao carregar dados:", e);
+        const resposta = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            action: "usuario",
+            token: token
+          })
+        });
+
+        const dados = await resposta.json();
+        document.getElementById("nome").value = dados.nome || "";
+        document.getElementById("email").value = dados.email || "";
+
+      } catch (erro) {
+        console.error("Erro ao carregar:", erro);
         alert("Erro ao carregar dados do usuário.");
       }
     }
 
     async function atualizarNome() {
       const token = localStorage.getItem("token");
-      const nome = nomeInput.value.trim();
-
-      if (!nome) return alert("Informe um nome válido.");
+      const nome = document.getElementById("nome").value;
 
       try {
-        const res = await fetch(`${urlAPI}?action=atualizarnome&token=${token}&nome=${encodeURIComponent(nome)}`);
-        const msg = await res.text();
-        if (msg === "OK") {
+        const resposta = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            action: "atualizar_nome",
+            token: token,
+            nome: nome
+          })
+        });
+
+        const resultado = await resposta.text();
+        if (resultado === "OK") {
           alert("Nome atualizado com sucesso!");
         } else {
-          alert("Erro ao atualizar nome: " + msg);
+          alert("Erro ao atualizar nome: " + resultado);
         }
-      } catch (e) {
-        console.error("Erro ao atualizar nome:", e);
+      } catch (erro) {
+        console.error("Erro ao atualizar nome:", erro);
         alert("Erro ao atualizar nome.");
       }
     }
