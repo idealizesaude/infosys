@@ -19,16 +19,6 @@
       margin: 0;
       padding: 2rem;
     }
-    .topbar {
-      background-color: var(--rosa);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -118,11 +108,6 @@
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <h1>Gestão de Usuários</h1>
-    <span id="nome-usuario"><strong>Carregando...</strong></span>
-  </div>
-
   <div class="container">
     <h2>Usuários Cadastrados</h2>
     <table>
@@ -164,14 +149,14 @@
   </div>
 
   <script>
-    const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
-
     async function carregarUsuarios() {
       const corpo = document.getElementById("corpo-tabela");
       corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
 
       try {
-        const response = await fetch(URL_API, {
+        const url = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+        const response = await fetch(url, {
           method: "POST",
           body: new URLSearchParams({ action: "listar" })
         });
@@ -184,19 +169,19 @@
         dados.forEach(usuario => {
           const tr = document.createElement("tr");
 
-          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
+          let botoes = <span onclick="abrirModal('${usuario.email}')">✏️</span>;
 
           if (nivelAtual === "MASTER") {
-            botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
+            botoes += <span onclick="excluirUsuario('${usuario.email}')">🗑️</span>;
           }
 
-          tr.innerHTML = `
+          tr.innerHTML = 
             <td>${usuario.email}</td>
             <td>${usuario.nivel}</td>
             <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
             <td>${formatarData(usuario.ultimoLogin)}</td>
             <td class="acoes">${botoes}</td>
-          `;
+          ;
           corpo.appendChild(tr);
         });
 
@@ -210,7 +195,7 @@
       if (!valor) return "--";
       const d = new Date(valor);
       const pad = n => String(n).padStart(2, "0");
-      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      return ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())};
     }
 
     function abrirModal(email) {
@@ -228,41 +213,10 @@
     }
 
     function excluirUsuario(email) {
-      alert(`Excluir: ${email} (função ainda não implementada).`);
-    }
-
-    async function carregarNomeUsuario() {
-      const token = localStorage.getItem("token");
-      const spanNome = document.getElementById("nome-usuario");
-
-      const nomeLocal = localStorage.getItem("nome_usuario");
-      if (nomeLocal) {
-        spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-      }
-
-      if (!token) return;
-
-      try {
-        const resposta = await fetch(URL_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "usuario", token })
-        });
-
-        const texto = await resposta.text();
-        if (texto.startsWith("{")) {
-          const dados = JSON.parse(texto);
-          const nome = dados.nome?.trim() || dados.email;
-          spanNome.innerHTML = `<strong>${nome}</strong>`;
-          localStorage.setItem("nome_usuario", nome);
-        }
-      } catch (erro) {
-        console.error("Erro ao carregar nome:", erro);
-      }
+      alert(Excluir: ${email} (função ainda não implementada).);
     }
 
     carregarUsuarios();
-    carregarNomeUsuario();
   </script>
 </body>
 </html>
