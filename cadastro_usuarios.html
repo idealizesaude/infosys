@@ -79,9 +79,9 @@
 
     <div class="info">
       O usuário receberá um e-mail com uma senha provisória e será obrigado a alterá-la no primeiro acesso.
-      <br><br>
-      
-    <form onsubmit="event.preventDefault(); alert('Usuário cadastrado (simulado).');">
+    </div>
+
+    <form id="formCadastro">
       <label for="email">E-mail Corporativo</label>
       <input type="email" id="email" required>
 
@@ -94,8 +94,62 @@
         <option value="MASTER">MASTER</option>
       </select>
 
-      <button type="submit">Cadastrar Usuário</button>
+      <button type="submit" id="btnCadastrar">Cadastrar Usuário</button>
     </form>
   </div>
+
+  <script>
+    async function cadastrarUsuario(event) {
+      event.preventDefault();
+
+      const emailInput = document.getElementById("email");
+      const nivelInput = document.getElementById("nivel");
+
+      const email = emailInput.value.trim();
+      const nivel = nivelInput.value;
+
+      if (!email || !nivel) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      const url = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "novo",
+            email: email,
+            nivel: nivel
+          }),
+        });
+
+        const resultado = await response.text();
+
+        switch (resultado) {
+          case "OK":
+            alert("Usuário cadastrado com sucesso! Um e-mail foi enviado com a senha provisória.");
+            emailInput.value = "";
+            nivelInput.value = "";
+            break;
+          case "JA_EXISTE":
+            alert("Este e-mail já está cadastrado.");
+            break;
+          case "FALTANDO_DADOS":
+            alert("Dados incompletos.");
+            break;
+          default:
+            alert("Erro inesperado: " + resultado);
+        }
+
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        alert("Erro ao tentar cadastrar o usuário.");
+      }
+    }
+
+    document.getElementById("formCadastro").addEventListener("submit", cadastrarUsuario);
+  </script>
 </body>
 </html>
