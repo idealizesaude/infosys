@@ -128,7 +128,7 @@
       <div class="user-menu" onclick="toggleMenu()">
         <div class="user-name">
           <img src="usuario.png" alt="Usuário" width="30">
-          <span><strong>JULIANA PEREIRA DA SILVA TEDESCO</strong></span>
+          <span id="nome-usuario"><strong>Carregando...</strong></span>
         </div>
         <div class="user-dropdown" id="dropdown">
           <a href="gerenciar_conta.html">Gerenciar conta</a>
@@ -143,16 +143,49 @@
   </div>
 
   <script>
+    const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+    async function carregarNomeUsuario() {
+      const token = localStorage.getItem("token");
+      const spanNome = document.getElementById("nome-usuario");
+
+      // 1. Exibe nome salvo localmente (rápido)
+      const nomeLocal = localStorage.getItem("nome_usuario");
+      if (nomeLocal) {
+        spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
+      }
+
+      // 2. Atualiza do servidor em segundo plano
+      if (!token) return;
+
+      try {
+        const resposta = await fetch(URL_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "usuario", token })
+        });
+
+        const texto = await resposta.text();
+        if (texto.startsWith("{")) {
+          const dados = JSON.parse(texto);
+          const nome = dados.nome?.trim() || dados.email;
+          spanNome.innerHTML = `<strong>${nome}</strong>`;
+          localStorage.setItem("nome_usuario", nome);
+        }
+      } catch (erro) {
+        console.error("Erro ao atualizar nome do usuário:", erro);
+      }
+    }
+
     function toggleMenu() {
       const dropdown = document.getElementById("dropdown");
       dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     }
 
     function logout() {
-      // Limpa os dados do login armazenados localmente
       localStorage.removeItem('token');
       localStorage.removeItem('nivel');
-      // Redireciona para a página de login
+      localStorage.removeItem('nome_usuario');
       window.location.href = 'index.html';
     }
 
@@ -163,6 +196,8 @@
         dropdown.style.display = "none";
       }
     });
+
+    carregarNomeUsuario();
   </script>
 </body>
 </html>
