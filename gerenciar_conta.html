@@ -84,12 +84,17 @@
   </div>
 
   <script>
+    const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
     async function carregarUsuario() {
       const token = localStorage.getItem("token");
-      if (!token) return alert("Usuário não autenticado.");
+      if (!token) {
+        alert("Usuário não autenticado.");
+        return;
+      }
 
       try {
-        const resposta = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec", {
+        const resposta = await fetch(URL_API, {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -100,22 +105,34 @@
           })
         });
 
-        const dados = await resposta.json();
-        document.getElementById("nome").value = dados.nome || "";
-        document.getElementById("email").value = dados.email || "";
+        const texto = await resposta.text();
+
+        // Verifica se o retorno é JSON válido
+        if (texto.startsWith('{')) {
+          const dados = JSON.parse(texto);
+          document.getElementById("nome").value = dados.nome || "";
+          document.getElementById("email").value = dados.email || "";
+        } else {
+          throw new Error(texto);
+        }
 
       } catch (erro) {
-        console.error("Erro ao carregar:", erro);
+        console.error("Erro ao carregar dados:", erro);
         alert("Erro ao carregar dados do usuário.");
       }
     }
 
     async function atualizarNome() {
       const token = localStorage.getItem("token");
-      const nome = document.getElementById("nome").value;
+      const nome = document.getElementById("nome").value.trim();
+
+      if (!nome) {
+        alert("O nome não pode estar vazio.");
+        return;
+      }
 
       try {
-        const resposta = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec", {
+        const resposta = await fetch(URL_API, {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -133,6 +150,7 @@
         } else {
           alert("Erro ao atualizar nome: " + resultado);
         }
+
       } catch (erro) {
         console.error("Erro ao atualizar nome:", erro);
         alert("Erro ao atualizar nome.");
