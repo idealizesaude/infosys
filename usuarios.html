@@ -61,7 +61,6 @@
       font-size: 0.85rem;
     }
 
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -127,7 +126,6 @@
 <body>
   <div class="container">
     <h2>Usuários Cadastrados</h2>
-
     <table>
       <thead>
         <tr>
@@ -138,8 +136,8 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody id="tabela-usuarios">
-        <tr><td colspan="5">Carregando usuários...</td></tr>
+      <tbody id="corpo-tabela">
+        <tr><td colspan="5">Carregando...</td></tr>
       </tbody>
     </table>
   </div>
@@ -147,14 +145,14 @@
   <div class="modal" id="modal-edicao">
     <div class="modal-content">
       <h3>Editar Usuário</h3>
-      <label for="modal-nivel">Nível</label>
+      <label for="nivel">Nível</label>
       <select id="modal-nivel">
         <option>BASICO</option>
         <option>INTERMEDIARIO</option>
         <option>AVANCADO</option>
         <option>MASTER</option>
       </select>
-      <label for="modal-status">Status</label>
+      <label for="status">Status</label>
       <select id="modal-status">
         <option>Ativo</option>
         <option>Inativo</option>
@@ -167,65 +165,67 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec';
-
     async function carregarUsuarios() {
+      const corpo = document.getElementById("corpo-tabela");
+      corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
+
       try {
-        const res = await fetch(API_URL + '?action=lista', { method: 'POST' });
-        const dados = await res.json();
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec?action=listar");
+        const dados = await response.json();
+        const nivelAtual = localStorage.getItem("nivel");
 
-        const corpo = document.getElementById('tabela-usuarios');
-        corpo.innerHTML = '';
-
-        if (dados.length === 0) {
-          corpo.innerHTML = '<tr><td colspan="5">Nenhum usuário encontrado.</td></tr>';
-          return;
-        }
+        corpo.innerHTML = "";
 
         dados.forEach(usuario => {
-          const tr = document.createElement('tr');
+          const tr = document.createElement("tr");
+
+          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
+
+          if (nivelAtual === "MASTER") {
+            botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
+          }
+
           tr.innerHTML = `
             <td>${usuario.email}</td>
             <td>${usuario.nivel}</td>
             <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
             <td>${formatarData(usuario.ultimoLogin)}</td>
-            <td class="acoes">
-              <span onclick="abrirModal('${usuario.email}')">✏️</span>
-              <span>🗑️</span>
-            </td>
+            <td class="acoes">${botoes}</td>
           `;
           corpo.appendChild(tr);
         });
 
       } catch (erro) {
-        document.getElementById('tabela-usuarios').innerHTML = `
-          <tr><td colspan="5">Erro ao carregar dados.</td></tr>`;
-        console.error('Erro:', erro);
+        corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar usuários.</td></tr>";
+        console.error("Erro:", erro);
       }
     }
 
-    function formatarData(dataStr) {
-      if (!dataStr) return '--';
-      const data = new Date(dataStr);
-      if (isNaN(data)) return '--';
-      return data.toLocaleString('pt-BR');
+    function formatarData(valor) {
+      if (!valor) return "--";
+      const d = new Date(valor);
+      const pad = n => String(n).padStart(2, "0");
+      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
     function abrirModal(email) {
-      document.getElementById('modal-edicao').style.display = 'flex';
-      console.log('Editar usuário:', email);
+      document.getElementById("modal-edicao").style.display = "flex";
+      console.log("Editar usuário:", email);
     }
 
     function fecharModal() {
-      document.getElementById('modal-edicao').style.display = 'none';
+      document.getElementById("modal-edicao").style.display = "none";
     }
 
     function salvarAlteracoes() {
-      alert('Alterações salvas (simulado).');
+      alert("Alterações salvas (simulado).");
       fecharModal();
     }
 
-    // Carrega os dados ao abrir a página
+    function excluirUsuario(email) {
+      alert(`Excluir: ${email} (função ainda não implementada).`);
+    }
+
     carregarUsuarios();
   </script>
 </body>
