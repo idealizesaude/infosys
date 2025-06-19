@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerenciar Conta - InfoSys</title>
-  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
       --azul: #38b6ff;
@@ -17,12 +16,84 @@
       font-family: Arial, sans-serif;
       background: var(--cinza-claro);
       margin: 0;
-      padding: 2rem;
+    }
+
+    .topbar {
+      width: 100%;
+      height: 60px;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    .topbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .topbar .logo img {
+      height: 200px;
+    }
+
+    .topbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      position: relative;
+      margin-right: 3rem;
+    }
+
+    .topbar .user-info img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .topbar .user-info span {
+      color: var(--rosa);
+      font-weight: bold;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+      min-width: 180px;
+      z-index: 1000;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .dropdown a:hover {
+      background: #f0f0f0;
     }
 
     .container {
       max-width: 700px;
-      margin: 0 auto;
+      margin: 6rem auto 2rem;
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -68,16 +139,30 @@
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <a href="infosys_dashboard.html" class="logo">
+      <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize" />
+    </a>
+    <div class="user-info" onclick="toggleMenu()">
+      <img src="logo_usuario_rosa.png" alt="Usuário" />
+      <span id="nome-usuario"><strong>Carregando...</strong></span>
+      <div class="dropdown" id="dropdown">
+        <a href="gerenciar_conta.html">Gerenciar conta</a>
+        <a href="#" onclick="logout()">Sair</a>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <h2>Gerenciar Conta</h2>
 
     <label for="nome">Nome</label>
-    <input type="text" id="nome" />
+    <input type="text" id="nome" value="JULIANA PEREIRA DA SILVA TEDESCO" />
 
     <label for="email">E-mail</label>
-    <input type="email" id="email" class="readonly" readonly />
+    <input type="email" id="email" class="readonly" value="juliana.tedesco@idealizesaude.com.br" readonly />
 
-    <button onclick="atualizarNome()">Atualizar Dados</button>
+    <button onclick="alert('Alterações salvas!')">Atualizar Dados</button>
 
     <h2 style="margin-top: 2.5rem;">Acesso</h2>
     <button onclick="window.location.href='alterar-senha.html'">Alterar senha</button>
@@ -86,78 +171,52 @@
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
-    async function carregarUsuario() {
+    function toggleMenu() {
+      const menu = document.getElementById("dropdown");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("nivel");
+      localStorage.removeItem("nome_usuario");
+      window.location.href = "index.html";
+    }
+
+    async function carregarNomeUsuario() {
+      const span = document.getElementById("nome-usuario");
+      const nomeLocal = localStorage.getItem("nome_usuario");
+      if (nomeLocal) span.innerHTML = `<strong>${nomeLocal}</strong>`;
+
       const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Usuário não autenticado.");
-        return;
-      }
+      if (!token) return;
 
       try {
-        const resposta = await fetch(URL_API, {
+        const resp = await fetch(URL_API, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams({
-            action: "usuario",
-            token: token
-          })
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "usuario", token })
         });
 
-        const texto = await resposta.text();
-
-        // Verifica se o retorno é JSON válido
-        if (texto.startsWith('{')) {
+        const texto = await resp.text();
+        if (texto.startsWith("{")) {
           const dados = JSON.parse(texto);
-          document.getElementById("nome").value = dados.nome || "";
-          document.getElementById("email").value = dados.email || "";
-        } else {
-          throw new Error(texto);
+          const nome = dados.nome?.trim() || dados.email;
+          span.innerHTML = `<strong>${nome}</strong>`;
+          localStorage.setItem("nome_usuario", nome);
         }
-
-      } catch (erro) {
-        console.error("Erro ao carregar dados:", erro);
-        alert("Erro ao carregar dados do usuário.");
+      } catch (e) {
+        console.error("Erro ao buscar usuário:", e);
       }
     }
 
-    async function atualizarNome() {
-      const token = localStorage.getItem("token");
-      const nome = document.getElementById("nome").value.trim();
+    document.addEventListener("click", (e) => {
+      const drop = document.getElementById("dropdown");
+      const user = document.querySelector(".user-info");
+      if (!user.contains(e.target)) drop.style.display = "none";
+    });
 
-      if (!nome) {
-        alert("O nome não pode estar vazio.");
-        return;
-      }
-
-      try {
-        const resposta = await fetch(URL_API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams({
-            action: "atualizar_nome",
-            token: token,
-            nome: nome
-          })
-        });
-
-        const resultado = await resposta.text();
-        if (resultado === "OK") {
-          alert("Nome atualizado com sucesso!");
-        } else {
-          alert("Erro ao atualizar nome: " + resultado);
-        }
-
-      } catch (erro) {
-        console.error("Erro ao atualizar nome:", erro);
-        alert("Erro ao atualizar nome.");
-      }
-    }
-
-    carregarUsuario();
+    carregarNomeUsuario();
   </script>
 </body>
 </html>
