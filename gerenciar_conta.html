@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerenciar Conta - InfoSys</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --azul: #38b6ff;
@@ -48,21 +49,17 @@
     .topbar .user-info {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 10px;
       cursor: pointer;
       position: relative;
       margin-right: 3rem;
-    }
-
-    .topbar .user-info img {
-      width: 28px;
-      height: 28px;
     }
 
     .topbar .user-info span {
       font-family: Arial, sans-serif;
       color: var(--rosa);
       font-weight: bold;
+      font-size: 1rem;
       max-width: 250px;
       white-space: nowrap;
       overflow: hidden;
@@ -146,7 +143,7 @@
       <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize" />
     </a>
     <div class="user-info" onclick="toggleMenu()">
-      <img src="logo_usuario_rosa.png" alt="Usuário" />
+      <img src="logo_usuario_rosa.png" alt="Usuário" width="28" />
       <span id="nome-usuario"><strong id="usuario-topbar">Carregando...</strong></span>
       <div class="dropdown" id="dropdown">
         <a href="gerenciar_conta.html">Gerenciar conta</a>
