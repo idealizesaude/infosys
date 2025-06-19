@@ -175,9 +175,19 @@
 
     async function carregarUsuario() {
       const token = localStorage.getItem("token");
+      const nomeLocal = localStorage.getItem("nome_usuario");
+      const emailLocal = localStorage.getItem("email_usuario");
+
       if (!token) {
         alert("Usuário não autenticado.");
         return;
+      }
+
+      if (nomeLocal) {
+        document.getElementById("nome").value = nomeLocal;
+      }
+      if (emailLocal) {
+        document.getElementById("email").value = emailLocal;
       }
 
       try {
@@ -198,6 +208,8 @@
           const dados = JSON.parse(texto);
           document.getElementById("nome").value = dados.nome || "";
           document.getElementById("email").value = dados.email || "";
+          localStorage.setItem("nome_usuario", dados.nome || "");
+          localStorage.setItem("email_usuario", dados.email || "");
         } else {
           throw new Error(texto);
         }
@@ -233,6 +245,7 @@
         const resultado = await resposta.text();
         if (resultado === "OK") {
           alert("Nome atualizado com sucesso!");
+          localStorage.setItem("nome_usuario", nome);
         } else {
           alert("Erro ao atualizar nome: " + resultado);
         }
@@ -252,6 +265,7 @@
       localStorage.removeItem("token");
       localStorage.removeItem("nivel");
       localStorage.removeItem("nome_usuario");
+      localStorage.removeItem("email_usuario");
       window.location.href = "index.html";
     }
 
