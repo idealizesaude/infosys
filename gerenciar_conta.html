@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerenciar Conta - InfoSys</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
       --azul: #38b6ff;
@@ -59,6 +60,7 @@
     }
 
     .topbar .user-info span {
+      font-family: Arial, sans-serif;
       color: var(--rosa);
       font-weight: bold;
       max-width: 250px;
@@ -157,12 +159,12 @@
     <h2>Gerenciar Conta</h2>
 
     <label for="nome">Nome</label>
-    <input type="text" id="nome" value="JULIANA PEREIRA DA SILVA TEDESCO" />
+    <input type="text" id="nome" />
 
     <label for="email">E-mail</label>
-    <input type="email" id="email" class="readonly" value="juliana.tedesco@idealizesaude.com.br" readonly />
+    <input type="email" id="email" class="readonly" readonly />
 
-    <button onclick="alert('Alterações salvas!')">Atualizar Dados</button>
+    <button onclick="atualizarNome()">Atualizar Dados</button>
 
     <h2 style="margin-top: 2.5rem;">Acesso</h2>
     <button onclick="window.location.href='alterar-senha.html'">Alterar senha</button>
@@ -170,6 +172,76 @@
 
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+    async function carregarUsuario() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Usuário não autenticado.");
+        return;
+      }
+
+      try {
+        const resposta = await fetch(URL_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            action: "usuario",
+            token: token
+          })
+        });
+
+        const texto = await resposta.text();
+
+        if (texto.startsWith('{')) {
+          const dados = JSON.parse(texto);
+          document.getElementById("nome").value = dados.nome || "";
+          document.getElementById("email").value = dados.email || "";
+        } else {
+          throw new Error(texto);
+        }
+
+      } catch (erro) {
+        console.error("Erro ao carregar dados:", erro);
+        alert("Erro ao carregar dados do usuário.");
+      }
+    }
+
+    async function atualizarNome() {
+      const token = localStorage.getItem("token");
+      const nome = document.getElementById("nome").value.trim();
+
+      if (!nome) {
+        alert("O nome não pode estar vazio.");
+        return;
+      }
+
+      try {
+        const resposta = await fetch(URL_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            action: "atualizar_nome",
+            token: token,
+            nome: nome
+          })
+        });
+
+        const resultado = await resposta.text();
+        if (resultado === "OK") {
+          alert("Nome atualizado com sucesso!");
+        } else {
+          alert("Erro ao atualizar nome: " + resultado);
+        }
+
+      } catch (erro) {
+        console.error("Erro ao atualizar nome:", erro);
+        alert("Erro ao atualizar nome.");
+      }
+    }
 
     function toggleMenu() {
       const menu = document.getElementById("dropdown");
@@ -183,40 +255,13 @@
       window.location.href = "index.html";
     }
 
-    async function carregarNomeUsuario() {
-      const span = document.getElementById("nome-usuario");
-      const nomeLocal = localStorage.getItem("nome_usuario");
-      if (nomeLocal) span.innerHTML = `<strong>${nomeLocal}</strong>`;
-
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      try {
-        const resp = await fetch(URL_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "usuario", token })
-        });
-
-        const texto = await resp.text();
-        if (texto.startsWith("{")) {
-          const dados = JSON.parse(texto);
-          const nome = dados.nome?.trim() || dados.email;
-          span.innerHTML = `<strong>${nome}</strong>`;
-          localStorage.setItem("nome_usuario", nome);
-        }
-      } catch (e) {
-        console.error("Erro ao buscar usuário:", e);
-      }
-    }
-
     document.addEventListener("click", (e) => {
       const drop = document.getElementById("dropdown");
       const user = document.querySelector(".user-info");
       if (!user.contains(e.target)) drop.style.display = "none";
     });
 
-    carregarNomeUsuario();
+    carregarUsuario();
   </script>
 </body>
 </html>
