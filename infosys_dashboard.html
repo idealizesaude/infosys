@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InfoSys - Página Inicial</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,60 +20,47 @@
       background-color: var(--cinza-claro);
     }
 
-    .sidebar {
-      width: 240px;
-      height: 100vh;
-      position: fixed;
-      background-color: var(--azul);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
-    }
-
-    .sidebar img {
-      max-width: 160px;
-      margin: 0 auto 1rem;
-    }
-
-    .sidebar a {
-      padding: 0.8rem 1.5rem;
-      text-decoration: none;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sidebar a:hover {
-      background-color: #2fa3e6;
-    }
-
-    .main {
-      margin-left: 240px;
-      padding: 1rem;
-    }
-
-    .header {
-      background-color: var(--rosa);
-      color: white;
-      padding: 1rem;
-      border-radius: 8px;
+    .topbar {
+      width: 100%;
+      height: 60px;
+      background: #fff;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
     }
 
-    .user-menu {
-      position: relative;
-      cursor: pointer;
-    }
-
-    .user-name {
+    .topbar .logo {
       display: flex;
       align-items: center;
       gap: 10px;
+      cursor: pointer;
+    }
+
+    .topbar .logo img {
+      height: 200px;
+    }
+
+    .topbar .user-menu {
+      position: relative;
+      cursor: pointer;
+      margin-right: 3rem;
+    }
+
+    .topbar .user-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cinza-escuro);
+      max-width: 250px; /* limite de largura ajustável */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .user-dropdown {
@@ -100,6 +87,38 @@
       background-color: #eee;
     }
 
+    .sidebar {
+      width: 240px;
+      height: 100vh;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      background-color: var(--azul);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+    }
+
+    .sidebar a {
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar a:hover {
+      background-color: #2fa3e6;
+    }
+
+    .main {
+      margin-left: 240px;
+      padding: 1rem;
+      margin-top: 60px;
+    }
+
     .chart-placeholder {
       background: white;
       margin-top: 2rem;
@@ -112,8 +131,23 @@
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="logo" onclick="window.location.href='infosys_dashboard.html'">
+      <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
+    </div>
+    <div class="user-menu" onclick="toggleMenu()">
+      <div class="user-name">
+        <img src="usuario.png" alt="Usuário" width="28">
+        <span id="nome-usuario"><strong>Carregando...</strong></span>
+      </div>
+      <div class="user-dropdown" id="dropdown">
+        <a href="gerenciar_conta.html">Gerenciar conta</a>
+        <a href="#" onclick="logout()">Sair</a>
+      </div>
+    </div>
+  </div>
+
   <aside class="sidebar">
-    <img src="Vertical-Azul-SemFundo.png" alt="Logo Idealize" />
     <a href="#"><i class="fas fa-cash-register"></i> Fechamento de Caixa</a>
     <a href="#"><i class="fas fa-tags"></i> Controle de Vendas Clube ID</a>
     <a href="#"><i class="fas fa-user-slash"></i> Clientes Indesejáveis</a>
@@ -123,20 +157,6 @@
   </aside>
 
   <div class="main">
-    <div class="header">
-      <h1>Bem-vindo ao InfoSys</h1>
-      <div class="user-menu" onclick="toggleMenu()">
-        <div class="user-name">
-          <img src="usuario.png" alt="Usuário" width="30">
-          <span id="nome-usuario"><strong>Carregando...</strong></span>
-        </div>
-        <div class="user-dropdown" id="dropdown">
-          <a href="gerenciar_conta.html">Gerenciar conta</a>
-          <a href="#" onclick="logout()">Sair</a>
-        </div>
-      </div>
-    </div>
-
     <div class="chart-placeholder">
       [Área para gráfico de desempenho mensal - a ser integrado com JS futuramente]
     </div>
@@ -149,13 +169,11 @@
       const token = localStorage.getItem("token");
       const spanNome = document.getElementById("nome-usuario");
 
-      // 1. Exibe nome salvo localmente (rápido)
       const nomeLocal = localStorage.getItem("nome_usuario");
       if (nomeLocal) {
         spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
       }
 
-      // 2. Atualiza do servidor em segundo plano
       if (!token) return;
 
       try {
