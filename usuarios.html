@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Usuários - InfoSys</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
@@ -13,37 +13,114 @@
       --cinza-borda: #ccc;
       --cinza-texto: #333;
     }
+
     body {
       font-family: Arial, sans-serif;
       background: var(--cinza-claro);
       margin: 0;
-      padding: 2rem;
+      padding: 0;
     }
+
+    .topbar {
+      width: 100%;
+      height: 60px;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    .topbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .topbar .logo img {
+      height: 200px;
+    }
+
+    .topbar .user-menu {
+      position: relative;
+      cursor: pointer;
+      margin-right: 3rem;
+    }
+
+    .topbar .user-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--rosa);
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      color: black;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      min-width: 180px;
+      z-index: 1000;
+    }
+
+    .user-dropdown a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .user-dropdown a:hover {
+      background-color: #eee;
+    }
+
     .container {
       max-width: 1000px;
-      margin: 0 auto;
+      margin: 100px auto 0;
       background: white;
       border-radius: 8px;
       padding: 2rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+
     h2 {
       color: var(--azul);
       margin-bottom: 1.5rem;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
     }
+
     th, td {
       padding: 0.8rem;
       text-align: left;
       border-bottom: 1px solid var(--cinza-borda);
     }
+
     th {
       background-color: #e6f6ff;
       color: var(--cinza-texto);
     }
+
     .acoes span {
       display: inline-block;
       margin-right: 10px;
@@ -53,6 +130,7 @@
       cursor: pointer;
       font-size: 0.85rem;
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -65,32 +143,38 @@
       align-items: center;
       z-index: 1000;
     }
+
     .modal-content {
       background: white;
       padding: 2rem;
       border-radius: 8px;
       width: 300px;
     }
+
     .modal-content h3 {
       margin-top: 0;
       color: var(--azul);
     }
+
     .modal-content label {
       display: block;
       margin-top: 1rem;
       font-weight: bold;
     }
+
     .modal-content select,
     .modal-content button {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.5rem;
     }
+
     .modal-content .actions {
       display: flex;
       justify-content: space-between;
       margin-top: 1.5rem;
     }
+
     .modal-content .actions button {
       width: 48%;
       border: none;
@@ -98,9 +182,11 @@
       font-weight: bold;
       cursor: pointer;
     }
+
     .cancelar {
       background-color: #ccc;
     }
+
     .salvar {
       background-color: var(--azul);
       color: white;
@@ -108,6 +194,22 @@
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <a href="infosys_dashboard.html" class="logo">
+      <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize">
+    </a>
+    <div class="user-menu" onclick="toggleMenu()">
+      <div class="user-name">
+        <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
+        <span id="nome-usuario"><strong>Carregando...</strong></span>
+      </div>
+      <div class="user-dropdown" id="dropdown">
+        <a href="gerenciar_conta.html">Gerenciar conta</a>
+        <a href="#" onclick="logout()">Sair</a>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <h2>Usuários Cadastrados</h2>
     <table>
@@ -120,8 +222,26 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody id="corpo-tabela">
-        <tr><td colspan="5">Carregando...</td></tr>
+      <tbody>
+        <tr>
+          <td>william.tedesco@idealizesaude.com.br</td>
+          <td>MASTER</td>
+          <td>Ativo</td>
+          <td>16/06/2025 18:13</td>
+          <td class="acoes">
+            <span onclick="abrirModal('william.tedesco@idealizesaude.com.br')">✏️</span>
+            <span>🗑️</span>
+          </td>
+        </tr>
+        <tr>
+          <td>juliana.tedesco@idealizesaude.com.br</td>
+          <td>AVANCADO</td>
+          <td>Inativo</td>
+          <td>--</td>
+          <td class="acoes">
+            <span onclick="abrirModal('juliana.tedesco@idealizesaude.com.br')">✏️</span>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -149,74 +269,46 @@
   </div>
 
   <script>
-    async function carregarUsuarios() {
-      const corpo = document.getElementById("corpo-tabela");
-      corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
+    const spanNome = document.getElementById("nome-usuario");
+    const nomeLocal = localStorage.getItem("nome_usuario");
+    if (spanNome && nomeLocal) {
+      spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
+    }
 
-      try {
-        const url = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+    function toggleMenu() {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
 
-        const response = await fetch(url, {
-          method: "POST",
-          body: new URLSearchParams({ action: "listar" })
-        });
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("nivel");
+      localStorage.removeItem("nome_usuario");
+      localStorage.removeItem("email_usuario");
+      window.location.href = "index.html";
+    }
 
-        const dados = await response.json();
-        const nivelAtual = localStorage.getItem("nivel");
-
-        corpo.innerHTML = "";
-
-        dados.forEach(usuario => {
-          const tr = document.createElement("tr");
-
-          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
-
-          if (nivelAtual === "MASTER") {
-            botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
-          }
-
-          tr.innerHTML = `
-            <td>${usuario.email}</td>
-            <td>${usuario.nivel}</td>
-            <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
-            <td>${formatarData(usuario.ultimoLogin)}</td>
-            <td class="acoes">${botoes}</td>
-          `;
-          corpo.appendChild(tr);
-        });
-
-      } catch (erro) {
-        corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar usuários.</td></tr>";
-        console.error("Erro:", erro);
+    document.addEventListener("click", function (event) {
+      const dropdown = document.getElementById("dropdown");
+      const userMenu = document.querySelector(".user-menu");
+      if (!userMenu.contains(event.target)) {
+        dropdown.style.display = "none";
       }
-    }
-
-    function formatarData(valor) {
-      if (!valor) return "--";
-      const d = new Date(valor);
-      const pad = n => String(n).padStart(2, "0");
-      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    }
+    });
 
     function abrirModal(email) {
-      document.getElementById("modal-edicao").style.display = "flex";
-      console.log("Editar usuário:", email);
+      document.getElementById('modal-edicao').style.display = 'flex';
+      console.log('Editar usuário:', email);
     }
 
     function fecharModal() {
-      document.getElementById("modal-edicao").style.display = "none";
+      document.getElementById('modal-edicao').style.display = 'none';
     }
 
     function salvarAlteracoes() {
-      alert("Alterações salvas (simulado).");
+      alert('Alterações salvas (simulado).');
       fecharModal();
     }
-
-    function excluirUsuario(email) {
-      alert(`Excluir: ${email} (função ainda não implementada).`);
-    }
-
-    carregarUsuarios();
   </script>
 </body>
 </html>
