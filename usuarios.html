@@ -222,26 +222,8 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>william.tedesco@idealizesaude.com.br</td>
-          <td>MASTER</td>
-          <td>Ativo</td>
-          <td>16/06/2025 18:13</td>
-          <td class="acoes">
-            <span onclick="abrirModal('william.tedesco@idealizesaude.com.br')">✏️</span>
-            <span>🗑️</span>
-          </td>
-        </tr>
-        <tr>
-          <td>juliana.tedesco@idealizesaude.com.br</td>
-          <td>AVANCADO</td>
-          <td>Inativo</td>
-          <td>--</td>
-          <td class="acoes">
-            <span onclick="abrirModal('juliana.tedesco@idealizesaude.com.br')">✏️</span>
-          </td>
-        </tr>
+      <tbody id="corpo-tabela">
+        <tr><td colspan="5">Carregando...</td></tr>
       </tbody>
     </table>
   </div>
@@ -269,6 +251,54 @@
   </div>
 
   <script>
+    const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+
+    async function carregarUsuarios() {
+      const corpo = document.getElementById("corpo-tabela");
+      corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
+
+      try {
+        const response = await fetch(URL_API, {
+          method: "POST",
+          body: new URLSearchParams({ action: "listar" })
+        });
+
+        const dados = await response.json();
+        const nivelAtual = localStorage.getItem("nivel");
+
+        corpo.innerHTML = "";
+
+        dados.forEach(usuario => {
+          const tr = document.createElement("tr");
+          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
+
+          if (nivelAtual === "MASTER") {
+            botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
+          }
+
+          tr.innerHTML = `
+            <td>${usuario.email}</td>
+            <td>${usuario.nivel}</td>
+            <td>${usuario.ativo ? 'Ativo' : 'Inativo'}</td>
+            <td>${formatarData(usuario.ultimoLogin)}</td>
+            <td class="acoes">${botoes}</td>
+          `;
+          corpo.appendChild(tr);
+        });
+
+      } catch (erro) {
+        corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar usuários.</td></tr>";
+        console.error("Erro:", erro);
+      }
+    }
+
+    function formatarData(valor) {
+      if (!valor) return "--";
+      const d = new Date(valor);
+      const pad = n => String(n).padStart(2, "0");
+      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
     const spanNome = document.getElementById("nome-usuario");
     const nomeLocal = localStorage.getItem("nome_usuario");
     if (spanNome && nomeLocal) {
@@ -309,6 +339,12 @@
       alert('Alterações salvas (simulado).');
       fecharModal();
     }
+
+    function excluirUsuario(email) {
+      alert(`Excluir: ${email} (função ainda não implementada).`);
+    }
+
+    carregarUsuarios();
   </script>
 </body>
 </html>
