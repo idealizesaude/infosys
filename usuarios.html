@@ -194,6 +194,16 @@
   </style>
 </head>
 <body>
+  <!-- Segurança: redireciona para login se não autenticado -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+        window.location.href = 'index.html';
+      }
+    })();
+  </script>
+
   <div class="topbar">
     <a href="infosys_dashboard.html" class="logo">
       <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize">
@@ -280,7 +290,7 @@
           const tr = document.createElement("tr");
           let botoes = "";
 
-          // permissões de edição baseado na hierarquia
+          // permissões de edição baseado na hierarquia
           if (hierarquia[nivelAtual] >= hierarquia[usuario.nivel]) {
             botoes += `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
           } else {
