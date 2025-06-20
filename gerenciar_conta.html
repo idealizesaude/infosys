@@ -138,6 +138,16 @@
   </style>
 </head>
 <body>
+  <!-- Segurança: redireciona para login se não autenticado -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+        window.location.href = 'index.html';
+      }
+    })();
+  </script>
+
   <div class="topbar">
     <a href="infosys_dashboard.html" class="logo">
       <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize" />
@@ -190,18 +200,13 @@
       try {
         const resposta = await fetch(URL_API, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams({
-            action: "usuario",
-            token: token
-          })
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "usuario", token: token })
         });
 
         const texto = await resposta.text();
 
-        if (texto.startsWith('{')) {
+        if (texto.startsWith("{")) {
           const dados = JSON.parse(texto);
           document.getElementById("nome").value = dados.nome || "";
           document.getElementById("email").value = dados.email || "";
@@ -229,14 +234,8 @@
       try {
         const resposta = await fetch(URL_API, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: new URLSearchParams({
-            action: "atualizar_nome",
-            token: token,
-            nome: nome
-          })
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "atualizar_nome", token: token, nome: nome })
         });
 
         const resultado = await resposta.text();
