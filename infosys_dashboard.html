@@ -136,6 +136,16 @@
   </style>
 </head>
 <body>
+  <!-- Segurança: redireciona para login se não autenticado (salta ambiente file://) -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+        window.location.href = 'index.html';
+      }
+    })();
+  </script>
+
   <div class="topbar">
     <div class="logo" onclick="window.location.href='infosys_dashboard.html'">
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
@@ -172,27 +182,9 @@
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
     async function carregarNomeUsuario() {
-      const token = localStorage.getItem("token");
       const spanNome = document.getElementById("nome-usuario");
       const nomeLocal = localStorage.getItem("nome_usuario");
       if (nomeLocal) spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-      if (!token) return;
-      try {
-        const resposta = await fetch(URL_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "usuario", token })
-        });
-        const texto = await resposta.text();
-        if (texto.startsWith("{")) {
-          const dados = JSON.parse(texto);
-          const nome = dados.nome?.trim() || dados.email;
-          spanNome.innerHTML = `<strong>${nome}</strong>`;
-          localStorage.setItem("nome_usuario", nome);
-        }
-      } catch {
-        console.error("Erro ao atualizar nome do usuário");
-      }
     }
 
     function toggleMenu() {
