@@ -121,6 +121,16 @@
       padding: 1rem;
       margin-top: 60px;
     }
+
+    .chart-placeholder {
+      background: white;
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      color: var(--cinza-escuro);
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -134,47 +144,57 @@
         <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
       <div class="user-dropdown" id="dropdown">
-        <a href="#conta">Gerenciar conta</a>
+        <a href="gerenciar_conta.html">Gerenciar conta</a>
         <a href="#" onclick="logout()">Sair</a>
       </div>
     </div>
   </div>
 
   <aside class="sidebar">
-    <a href="#dashboard"><i class="fas fa-cash-register"></i> Fechamento de Caixa</a>
-    <a href="#vendas"><i class="fas fa-tags"></i> Controle de Vendas Clube ID</a>
-    <a href="#clientes"><i class="fas fa-user-slash"></i> Clientes Indesejáveis</a>
-    <a href="#anotacoes"><i class="fas fa-sticky-note"></i> Anotações Importante</a>
-    <a href="#relatorios"><i class="fas fa-file-alt"></i> Relatórios</a>
-    <a href="#configuracoes"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#"><i class="fas fa-cash-register"></i> Fechamento de Caixa</a>
+    <a href="#"><i class="fas fa-tags"></i> Controle de Vendas Clube ID</a>
+    <a href="#"><i class="fas fa-user-slash"></i> Clientes Indesejáveis</a>
+    <a href="#"><i class="fas fa-sticky-note"></i> Anotações Importante</a>
+    <a href="#"><i class="fas fa-file-alt"></i> Relatórios</a>
+    <a href="configuracoes.html"><i class="fas fa-cogs"></i> Configurações</a>
   </aside>
 
-  <div class="main" id="conteudo">
-    <!-- Conteúdo SPA será carregado aqui -->
+  <div class="main">
+    <div class="chart-placeholder">
+      [Área para gráfico de desempenho mensal - a ser integrado com JS futuramente]
+    </div>
   </div>
 
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
-    const rotas = {
-      'dashboard': 'modulos/dashboard.html',
-      'vendas': 'modulos/vendas.html',
-      'clientes': 'modulos/clientes_indesejaveis.html',
-      'anotacoes': 'modulos/anotacoes.html',
-      'relatorios': 'modulos/relatorios.html',
-      'configuracoes': 'modulos/configuracoes.html',
-      'conta': 'modulos/gerenciar_conta.html'
-    };
+    async function carregarNomeUsuario() {
+      const token = localStorage.getItem("token");
+      const spanNome = document.getElementById("nome-usuario");
 
-    async function carregarPagina() {
-      const hash = location.hash.replace("#", "") || "dashboard";
-      const caminho = rotas[hash] || rotas['dashboard'];
+      const nomeLocal = localStorage.getItem("nome_usuario");
+      if (nomeLocal) {
+        spanNome.innerHTML = <strong>${nomeLocal}</strong>;
+      }
+
+      if (!token) return;
+
       try {
-        const resposta = await fetch(caminho);
-        const html = await resposta.text();
-        document.getElementById("conteudo").innerHTML = html;
-      } catch (e) {
-        document.getElementById("conteudo").innerHTML = "<p>Erro ao carregar o conteúdo.</p>";
+        const resposta = await fetch(URL_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ action: "usuario", token })
+        });
+
+        const texto = await resposta.text();
+        if (texto.startsWith("{")) {
+          const dados = JSON.parse(texto);
+          const nome = dados.nome?.trim() || dados.email;
+          spanNome.innerHTML = <strong>${nome}</strong>;
+          localStorage.setItem("nome_usuario", nome);
+        }
+      } catch (erro) {
+        console.error("Erro ao atualizar nome do usuário:", erro);
       }
     }
 
@@ -190,32 +210,6 @@
       window.location.href = 'index.html';
     }
 
-    async function carregarNomeUsuario() {
-      const token = localStorage.getItem("token");
-      const spanNome = document.getElementById("nome-usuario");
-      const nomeLocal = localStorage.getItem("nome_usuario");
-      if (nomeLocal) {
-        spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-      }
-      if (!token) return;
-      try {
-        const resposta = await fetch(URL_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "usuario", token })
-        });
-        const texto = await resposta.text();
-        if (texto.startsWith("{")) {
-          const dados = JSON.parse(texto);
-          const nome = dados.nome?.trim() || dados.email;
-          spanNome.innerHTML = `<strong>${nome}</strong>`;
-          localStorage.setItem("nome_usuario", nome);
-        }
-      } catch (erro) {
-        console.error("Erro ao atualizar nome do usuário:", erro);
-      }
-    }
-
     document.addEventListener("click", function(event) {
       const dropdown = document.getElementById("dropdown");
       const userMenu = document.querySelector(".user-menu");
@@ -224,11 +218,7 @@
       }
     });
 
-    window.addEventListener("hashchange", carregarPagina);
-    window.addEventListener("load", () => {
-      carregarNomeUsuario();
-      carregarPagina();
-    });
+    carregarNomeUsuario();
   </script>
 </body>
 </html>
