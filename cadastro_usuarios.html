@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuários - InfoSys</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
       --azul: #38b6ff;
@@ -56,7 +57,6 @@
       align-items: center;
       gap: 10px;
       color: var(--rosa);
-      font-family: Arial, sans-serif;
       font-size: 1rem;
       font-weight: bold;
       max-width: 250px;
@@ -143,6 +143,16 @@
   </style>
 </head>
 <body>
+  <!-- Segurança: redireciona para login se não autenticado -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+        window.location.href = 'index.html';
+      }
+    })();
+  </script>
+
   <div class="topbar">
     <a href="infosys_dashboard.html" class="logo">
       <img src="Horizontal-Branco-SemFundo.png" alt="Logo Idealize">
