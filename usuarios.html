@@ -253,6 +253,14 @@
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
+    // Definição da hierarquia de perfis
+    const hierarquia = {
+      "BASICO": 1,
+      "INTERMEDIARIO": 2,
+      "AVANCADO": 3,
+      "MASTER": 4
+    };
+
     async function carregarUsuarios() {
       const corpo = document.getElementById("corpo-tabela");
       corpo.innerHTML = "<tr><td colspan='5'>Carregando...</td></tr>";
@@ -270,8 +278,16 @@
 
         dados.forEach(usuario => {
           const tr = document.createElement("tr");
-          let botoes = `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
+          let botoes = "";
 
+          // permissões de edição baseado na hierarquia
+          if (hierarquia[nivelAtual] >= hierarquia[usuario.nivel]) {
+            botoes += `<span onclick="abrirModal('${usuario.email}')">✏️</span>`;
+          } else {
+            botoes += `<span onclick="alert('Você não tem permissão para editar este usuário.')">✏️</span>`;
+          }
+
+          // exclusão liberada apenas para MASTER
           if (nivelAtual === "MASTER") {
             botoes += `<span onclick="excluirUsuario('${usuario.email}')">🗑️</span>`;
           }
@@ -299,6 +315,7 @@
       return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
+    // exibe nome do usuario
     const spanNome = document.getElementById("nome-usuario");
     const nomeLocal = localStorage.getItem("nome_usuario");
     if (spanNome && nomeLocal) {
