@@ -1,4 +1,4 @@
-<!DOCTYPE html>More actions
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -35,15 +35,8 @@
       z-index: 100;
     }
 
-    .topbar .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
     .topbar .logo img {
-      height: 200px;
+      height: 50px;
     }
 
     .topbar .user-menu {
@@ -57,11 +50,8 @@
       align-items: center;
       gap: 10px;
       color: var(--rosa);
-      max-width: 250px; /* limite de largura ajustável */
-      font-family: Arial, sans-serif;
       font-size: 1rem;
       font-weight: bold;
-      max-width: 250px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -105,18 +95,24 @@
     }
 
     .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       width: 100%;
       padding: 0.8rem 1.5rem;
       text-decoration: none;
       color: white;
-      display: flex;
-      align-items: center;
-      gap: 10px;
       box-sizing: border-box;
     }
 
     .sidebar a:hover {
       background-color: #2fa3e6;
+    }
+
+    /* Garantir que ícone e texto não bloqueiem o hover */
+    .sidebar a i,
+    .sidebar a span {
+      pointer-events: none;
     }
 
     .main {
@@ -142,7 +138,7 @@
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
     </div>
     <div class="user-menu" onclick="toggleMenu()">
-      <div class="user-name">
+      <div class="user-name" id="user-toggle">
         <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
         <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
@@ -154,12 +150,12 @@
   </div>
 
   <aside class="sidebar">
-    <a href="#"><i class="fas fa-cash-register"></i> Fechamento de Caixa</a>
-    <a href="#"><i class="fas fa-tags"></i> Controle de Vendas Clube ID</a>
-    <a href="#"><i class="fas fa-user-slash"></i> Clientes Indesejáveis</a>
-    <a href="#"><i class="fas fa-sticky-note"></i> Anotações Importante</a>
-    <a href="#"><i class="fas fa-file-alt"></i> Relatórios</a>
-    <a href="configuracoes.html"><i class="fas fa-cogs"></i> Configurações</a>
+    <a href="#"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
+    <a href="#"><i class="fas fa-tags"></i><span>Controle de Vendas Clube ID</span></a>
+    <a href="#"><i class="fas fa-user-slash"></i><span>Clientes Indesejáveis</span></a>
+    <a href="#"><i class="fas fa-sticky-note"></i><span>Anotações Importante</span></a>
+    <a href="#"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
+    <a href="configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
 
   <div class="main">
@@ -174,21 +170,15 @@
     async function carregarNomeUsuario() {
       const token = localStorage.getItem("token");
       const spanNome = document.getElementById("nome-usuario");
-
       const nomeLocal = localStorage.getItem("nome_usuario");
-      if (nomeLocal) {
-        spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-      }
-
+      if (nomeLocal) spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
       if (!token) return;
-
       try {
         const resposta = await fetch(URL_API, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({ action: "usuario", token })
         });
-
         const texto = await resposta.text();
         if (texto.startsWith("{")) {
           const dados = JSON.parse(texto);
@@ -196,8 +186,8 @@
           spanNome.innerHTML = `<strong>${nome}</strong>`;
           localStorage.setItem("nome_usuario", nome);
         }
-      } catch (erro) {
-        console.error("Erro ao atualizar nome do usuário:", erro);
+      } catch {
+        console.error("Erro ao atualizar nome do usuário");
       }
     }
 
@@ -207,21 +197,17 @@
     }
 
     function logout() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('nivel');
-      localStorage.removeItem('nome_usuario');
+      localStorage.clear();
       window.location.href = 'index.html';
     }
 
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", event => {
       const dropdown = document.getElementById("dropdown");
-      const userMenu = document.querySelector(".user-menu");
-      if (!userMenu.contains(event.target)) {
-        dropdown.style.display = "none";
-      }
+      const userToggle = document.getElementById("user-toggle");
+      if (!userToggle.contains(event.target)) dropdown.style.display = "none";
     });
 
-    carregarNomeUsuario();
+    window.addEventListener("load", carregarNomeUsuario);
   </script>
 </body>
 </html>
