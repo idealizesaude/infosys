@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -57,6 +57,7 @@
       align-items: center;
       gap: 10px;
       color: var(--rosa);
+      max-width: 250px; /* limite de largura ajustável */
       font-family: Arial, sans-serif;
       font-size: 1rem;
       font-weight: bold;
@@ -174,7 +175,7 @@
 
       const nomeLocal = localStorage.getItem("nome_usuario");
       if (nomeLocal) {
-        spanNome.innerHTML = <strong>${nomeLocal}</strong>;
+        spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
       }
 
       if (!token) return;
@@ -190,7 +191,7 @@
         if (texto.startsWith("{")) {
           const dados = JSON.parse(texto);
           const nome = dados.nome?.trim() || dados.email;
-          spanNome.innerHTML = <strong>${nome}</strong>;
+          spanNome.innerHTML = `<strong>${nome}</strong>`;
           localStorage.setItem("nome_usuario", nome);
         }
       } catch (erro) {
