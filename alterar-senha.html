@@ -25,6 +25,15 @@ button.submit:hover{background:#1595e6}
 </style>
 </head>
 <body>
+  <!-- Segurança: redireciona para login se não autenticado -->
+  <script>
+    (function() {
+      const token = localStorage.getItem('token');
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+        window.location.href = 'index.html';
+      }
+    })();
+  </script>
 
 <div class="card">
   <h2>Defina sua nova senha</h2>
