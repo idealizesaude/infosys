@@ -91,7 +91,16 @@
       color: white;
       display: flex;
       flex-direction: column;
-      padding-top: 1rem;
+      padding-top: 0; /* reset to allow custom divider */
+    }
+
+    /* Divider between logo and first sidebar item */
+    .sidebar-divider {
+      width: 100%;
+      height: 50px;
+      background: var(--rosa);
+      margin-bottom: 0.5rem;
+      box-sizing: border-box;
     }
 
     .sidebar a {
@@ -107,12 +116,6 @@
 
     .sidebar a:hover {
       background-color: #2fa3e6;
-    }
-
-    /* Garantir que ícone e texto não bloqueiem o hover */
-    .sidebar a i,
-    .sidebar a span {
-      pointer-events: none;
     }
 
     .main {
@@ -150,6 +153,7 @@
   </div>
 
   <aside class="sidebar">
+    <div class="sidebar-divider"></div>
     <a href="#"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
     <a href="#"><i class="fas fa-tags"></i><span>Controle de Vendas Clube ID</span></a>
     <a href="#"><i class="fas fa-user-slash"></i><span>Clientes Indesejáveis</span></a>
