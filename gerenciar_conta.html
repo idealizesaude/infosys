@@ -182,13 +182,12 @@
 
     async function carregarUsuario() {
       const token = localStorage.getItem("token");
-      const nomeLocal = localStorage.getItem("nome_usuario");
-      const emailLocal = localStorage.getItem("email_usuario");
-
       if (!token) {
-        alert("Usuário não autenticado.");
+        // Sem token, retorna imediatamente
         return;
       }
+      const nomeLocal = localStorage.getItem("nome_usuario");
+      const emailLocal = localStorage.getItem("email_usuario");
 
       if (nomeLocal) {
         document.getElementById("usuario-topbar").textContent = nomeLocal;
@@ -201,7 +200,7 @@
         const resposta = await fetch(URL_API, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "usuario", token: token })
+          body: new URLSearchParams({ action: "usuario", token })
         });
 
         const texto = await resposta.text();
@@ -235,7 +234,7 @@
         const resposta = await fetch(URL_API, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ action: "atualizar_nome", token: token, nome: nome })
+          body: new URLSearchParams({ action: "atualizar_nome", token, nome })
         });
 
         const resultado = await resposta.text();
