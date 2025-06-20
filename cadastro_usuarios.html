@@ -220,6 +220,22 @@
         dropdown.style.display = "none";
       }
     });
+
+    // Ajusta opções de nível conforme hierarquia do usuário atual
+    (function() {
+      const hierarquia = { BASICO:1, INTERMEDIARIO:2, AVANCADO:3, MASTER:4 };
+      const nivelAtual = localStorage.getItem("nivel");
+      const select = document.getElementById("nivel");
+      if (nivelAtual && select) {
+        const max = hierarquia[nivelAtual] || 0;
+        for (let i = select.options.length - 1; i >= 0; i--) {
+          const opt = select.options[i];
+          if (opt.value && hierarquia[opt.value] > max) {
+            select.remove(i);
+          }
+        }
+      }
+    })();
   </script>
 </body>
 </html>
