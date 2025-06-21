@@ -136,6 +136,7 @@
     </div>
     <div class="user-menu" onclick="toggleMenu()">
       <div class="user-name">
+        <!-- ícone correto de usuário -->
         <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
         <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
@@ -178,6 +179,25 @@
       document.querySelectorAll('#nome-usuario').forEach(el => {
         el.innerHTML = nomeCache ? `<strong>${nomeCache}</strong>` : `<strong>Carregando...</strong>`;
       });
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      fetch(URL_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'usuario', token })
+      })
+      .then(r => r.text())
+      .then(txt => {
+        if (txt.startsWith('{')) {
+          const data = JSON.parse(txt);
+          const nome = (data.nome || data.email).trim();
+          document.querySelectorAll('#nome-usuario').forEach(el => {
+            el.innerHTML = `<strong>${nome}</strong>`;
+          });
+          localStorage.setItem('nome_usuario', nome);
+        }
+      })
+      .catch(console.error);
     }
 
     // Abre/fecha dropdown de usuário
@@ -191,15 +211,6 @@
       localStorage.clear();
       window.location.href = 'index.html';
     }
-
-    // Fecha dropdown ao clicar fora
-    document.addEventListener('click', event => {
-      const dropdown = document.getElementById('dropdown');
-      const userMenu = document.querySelector('.user-menu');
-      if (!userMenu.contains(event.target)) {
-        dropdown.style.display = 'none';
-      }
-    });
 
     // Carrega módulo e reinicia nome
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
@@ -216,7 +227,14 @@
       });
     });
 
-    // Inicialização ao carregar
+    // Fecha dropdown ao clicar fora
+    document.addEventListener('click', e => {
+      if (!document.querySelector('.user-menu').contains(e.target)) {
+        document.getElementById('dropdown').style.display = 'none';
+      }
+    });
+
+    // Inicialização
     window.addEventListener('load', () => {
       checkAuth();
       initNomeUsuario();
