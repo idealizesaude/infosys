@@ -13,13 +13,11 @@
       --cinza-claro: #f5f5f5;
       --cinza-escuro: #444;
     }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: var(--cinza-claro);
     }
-
     .topbar {
       width: 100%;
       height: 60px;
@@ -34,24 +32,20 @@
       left: 0;
       z-index: 100;
     }
-
     .topbar .logo {
       display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
     }
-
     .topbar .logo img {
       height: 50px;
     }
-
     .topbar .user-menu {
       position: relative;
       cursor: pointer;
       margin-right: 3rem;
     }
-
     .topbar .user-name {
       display: flex;
       align-items: center;
@@ -63,7 +57,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .user-dropdown {
       display: none;
       position: absolute;
@@ -76,18 +69,15 @@
       min-width: 180px;
       z-index: 1000;
     }
-
     .user-dropdown a {
       display: block;
       padding: 10px;
       text-decoration: none;
       color: black;
     }
-
     .user-dropdown a:hover {
       background-color: #eee;
     }
-
     .sidebar {
       width: 240px;
       height: 100vh;
@@ -100,7 +90,6 @@
       flex-direction: column;
       padding-top: 0;
     }
-
     .sidebar-divider {
       width: 100%;
       height: 10px;
@@ -108,7 +97,6 @@
       margin-bottom: 0.5rem;
       box-sizing: border-box;
     }
-
     .sidebar a {
       display: flex;
       align-items: center;
@@ -119,17 +107,14 @@
       color: white;
       box-sizing: border-box;
     }
-
     .sidebar a:hover {
       background-color: #2fa3e6;
     }
-
     .main {
       margin-left: 240px;
       padding: 1rem;
       margin-top: 60px;
     }
-
     .chart-placeholder {
       background: white;
       margin-top: 2rem;
@@ -142,7 +127,7 @@
   </style>
 </head>
 <body>
-  <!-- Segurança: redireciona para login se não autenticado (salta ambiente file://) -->
+  <!-- Segurança: redireciona se não autenticado -->
   <script>
     (function() {
       const token = localStorage.getItem('token');
@@ -157,9 +142,9 @@
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
     </div>
     <div class="user-menu" onclick="toggleMenu()">
-      <div class="user-name" id="user-toggle">
+      <div class="user-name">
         <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
-        <span id="nome-usuario"></span>
+        <span id="nome-usuario"><strong>Carregando…</strong></span>
       </div>
       <div class="user-dropdown" id="dropdown">
         <a href="gerenciar_conta.html">Gerenciar conta</a>
@@ -173,7 +158,7 @@
     <a href="#" data-module="modules/fechamento_caixa.html"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
     <a href="#" data-module="modules/clube_id.html"><i class="fas fa-tags"></i><span>Controle de Vendas Clube ID</span></a>
     <a href="#" data-module="modules/clientes_indesejaveis.html"><i class="fas fa-user-slash"></i><span>Clientes Indesejáveis</span></a>
-    <a href="#" data-module="modules/anotacoes_importantes.html"><i class="fas fa-sticky-note"></i><span>Anotações Importante</span></a>
+    <a href="#" data-module="modules/anotacoes_importantes.html"><i class="fas fa-sticky-note"></i><span>Anotações Importantes</span></a>
     <a href="#" data-module="modules/relatorios.html"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
     <a href="#" data-module="modules/configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
@@ -193,24 +178,31 @@
     }
 
     function initNomeUsuario() {
-      const spanNome = document.getElementById("nome-usuario");
-      const cached = localStorage.getItem('nome_usuario') || '';
-      if (cached) spanNome.innerHTML = `<strong>${cached}</strong>`;
+      const nomeUsuario = localStorage.getItem('nome_usuario') || '';
+      document.querySelectorAll('#nome-usuario').forEach(el => {
+        el.innerHTML = nomeUsuario
+          ? `<strong>${nomeUsuario}</strong>`
+          : `<strong>Carregando…</strong>`;
+      });
+      const token = localStorage.getItem('token');
+      if (!token) return;
       fetch(URL_API, {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams({action: 'usuario', token: localStorage.getItem('token')})
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'usuario', token })
       })
       .then(r => r.text())
-      .then(text => {
-        if (text.startsWith('{')) {
-          const data = JSON.parse(text);
-          const nome = data.nome?.trim() || data.email;
-          spanNome.innerHTML = `<strong>${nome}</strong>`;
+      .then(txt => {
+        if (txt.startsWith('{')) {
+          const data = JSON.parse(txt);
+          const nome = (data.nome || data.email).trim();
+          document.querySelectorAll('#nome-usuario').forEach(el => {
+            el.innerHTML = `<strong>${nome}</strong>`;
+          });
           localStorage.setItem('nome_usuario', nome);
         }
       })
-      .catch(err => console.error('Erro atualizando nome:', err));
+      .catch(err => console.error('Erro ao atualizar nome:', err));
     }
 
     function toggleMenu() {
@@ -223,12 +215,12 @@
       window.location.href = 'index.html';
     }
 
+    // carrega módulo e reinicia topbar
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         checkAuth();
-        const modulePath = link.getAttribute('data-module');
-        fetch(modulePath)
+        fetch(link.dataset.module)
           .then(res => res.text())
           .then(html => {
             document.getElementById('app').innerHTML = html;
@@ -240,8 +232,8 @@
 
     document.addEventListener("click", event => {
       const dropdown = document.getElementById("dropdown");
-      const userToggle = document.getElementById("user-toggle");
-      if (!userToggle.contains(event.target)) dropdown.style.display = "none";
+      const userMenu = document.querySelector(".user-menu");
+      if (!userMenu.contains(event.target)) dropdown.style.display = "none";
     });
 
     window.addEventListener("load", () => {
