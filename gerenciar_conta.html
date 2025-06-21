@@ -110,7 +110,8 @@
       margin-top: 1rem;
     }
 
-    input[type="text"], input[type="email"] {
+    input[type="text"], 
+    input[type="email"] {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.3rem;
@@ -183,14 +184,15 @@
     async function carregarUsuario() {
       const token = localStorage.getItem("token");
       if (!token) {
-        // Sem token, retorna imediatamente
         return;
       }
+      // Carrega rapidamente dados do armazenamento local
       const nomeLocal = localStorage.getItem("nome_usuario");
       const emailLocal = localStorage.getItem("email_usuario");
 
       if (nomeLocal) {
         document.getElementById("usuario-topbar").textContent = nomeLocal;
+        document.getElementById("nome").value = nomeLocal;
       }
       if (emailLocal) {
         document.getElementById("email").value = emailLocal;
@@ -204,9 +206,9 @@
         });
 
         const texto = await resposta.text();
-
         if (texto.startsWith("{")) {
           const dados = JSON.parse(texto);
+          // Atualiza campos com dados mais recentes
           document.getElementById("nome").value = dados.nome || "";
           document.getElementById("email").value = dados.email || "";
           localStorage.setItem("nome_usuario", dados.nome || "");
@@ -217,7 +219,6 @@
 
       } catch (erro) {
         console.error("Erro ao carregar dados:", erro);
-        alert("Erro ao carregar dados do usuário.");
       }
     }
 
@@ -257,10 +258,7 @@
     }
 
     function logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("nivel");
-      localStorage.removeItem("nome_usuario");
-      localStorage.removeItem("email_usuario");
+      localStorage.clear();
       window.location.href = "index.html";
     }
 
@@ -270,6 +268,7 @@
       if (!user.contains(e.target)) drop.style.display = "none";
     });
 
+    // Carrega assim que o script é lido
     carregarUsuario();
   </script>
 </body>
