@@ -115,39 +115,34 @@
   </style>
 </head>
 <body>
-  <!-- Segurança: redireciona para login se não autenticado -->
+  <!-- Segurança: redireciona se não autenticado -->
   <script>
     (function() {
       const token = localStorage.getItem('token');
-      if (
-        location.protocol !== 'file:' &&
-        !location.pathname.endsWith('index.html') &&
-        !token
-      ) {
+      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
         window.location.href = 'index.html';
       }
     })();
   </script>
 
-  <!-- Topbar única -->
+  <!-- Topbar -->
   <div class="topbar">
     <div class="logo" onclick="window.location.href='infosys_dashboard.html'">
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
     </div>
-    <div class="user-menu" onclick="toggleMenu()">
+    <div class="user-menu" id="user-menu">
       <div class="user-name">
-        <!-- ícone correto de usuário -->
         <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
         <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
       <div class="user-dropdown" id="dropdown">
         <a href="gerenciar_conta.html">Gerenciar conta</a>
-        <a href="#" onclick="logout()">Sair</a>
+        <a href="#" id="logout-btn">Sair</a>
       </div>
     </div>
   </div>
 
-  <!-- Sidebar com módulos -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-divider"></div>
     <a href="#" data-module="modules/fechamento_caixa.html"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
@@ -158,7 +153,7 @@
     <a href="#" data-module="modules/configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
 
-  <!-- Conteúdo principal -->
+  <!-- Conteúdo -->
   <div class="main" id="app">
     <div style="font-style: italic; color: var(--cinza-escuro);">
       Selecione uma opção na barra lateral.
@@ -168,17 +163,13 @@
   <script>
     const URL_API = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec';
 
-    // Verifica autenticação
     function checkAuth() {
       if (!localStorage.getItem('token')) window.location.href = 'index.html';
     }
 
-    // Carrega e atualiza nome do usuário
     function initNomeUsuario() {
       const nomeCache = localStorage.getItem('nome_usuario') || '';
-      document.querySelectorAll('#nome-usuario').forEach(el => {
-        el.innerHTML = nomeCache ? `<strong>${nomeCache}</strong>` : `<strong>Carregando...</strong>`;
-      });
+      document.querySelectorAll('#nome-usuario').forEach(el => el.innerHTML = nomeCache ? `<strong>${nomeCache}</strong>` : `<strong>Carregando...</strong>`);
       const token = localStorage.getItem('token');
       if (!token) return;
       fetch(URL_API, {
@@ -191,28 +182,31 @@
         if (txt.startsWith('{')) {
           const data = JSON.parse(txt);
           const nome = (data.nome || data.email).trim();
-          document.querySelectorAll('#nome-usuario').forEach(el => {
-            el.innerHTML = `<strong>${nome}</strong>`;
-          });
+          document.querySelectorAll('#nome-usuario').forEach(el => el.innerHTML = `<strong>${nome}</strong>`);
           localStorage.setItem('nome_usuario', nome);
         }
       })
       .catch(console.error);
     }
 
-    // Abre/fecha dropdown de usuário
     function toggleMenu() {
       const dd = document.getElementById('dropdown');
       dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
     }
 
-    // Logout
-    function logout() {
+    document.getElementById('user-menu').addEventListener('click', toggleMenu);
+    document.getElementById('logout-btn').addEventListener('click', e => {
+      e.preventDefault();
       localStorage.clear();
       window.location.href = 'index.html';
-    }
+    });
 
-    // Carrega módulo e reinicia nome
+    document.addEventListener('click', e => {
+      if (!document.getElementById('user-menu').contains(e.target)) {
+        document.getElementById('dropdown').style.display = 'none';
+      }
+    });
+
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -220,21 +214,16 @@
         fetch(link.getAttribute('data-module'))
           .then(r => r.text())
           .then(html => {
-            document.getElementById('app').innerHTML = html;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const body = doc.querySelector('body');
+            document.getElementById('app').innerHTML = body ? body.innerHTML : html;
             initNomeUsuario();
           })
           .catch(console.error);
       });
     });
 
-    // Fecha dropdown ao clicar fora
-    document.addEventListener('click', e => {
-      if (!document.querySelector('.user-menu').contains(e.target)) {
-        document.getElementById('dropdown').style.display = 'none';
-      }
-    });
-
-    // Inicialização
     window.addEventListener('load', () => {
       checkAuth();
       initNomeUsuario();
