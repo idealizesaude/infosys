@@ -129,14 +129,15 @@
     })();
   </script>
 
-  <!-- Topbar -->
+  <!-- Topbar única -->
   <div class="topbar">
     <div class="logo" onclick="window.location.href='infosys_dashboard.html'">
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
     </div>
     <div class="user-menu" onclick="toggleMenu()">
       <div class="user-name">
-        <i class="fas fa-user"></i>
+        <!-- ícone correto de usuário -->
+        <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
         <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
       <div class="user-dropdown" id="dropdown">
@@ -146,7 +147,7 @@
     </div>
   </div>
 
-  <!-- Sidebar -->
+  <!-- Sidebar com módulos -->
   <aside class="sidebar">
     <div class="sidebar-divider"></div>
     <a href="#" data-module="modules/fechamento_caixa.html"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
@@ -199,7 +200,7 @@
       .catch(console.error);
     }
 
-    // Toggle dropdown do usuário
+    // Abre/fecha dropdown de usuário
     function toggleMenu() {
       const dd = document.getElementById('dropdown');
       dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
@@ -211,7 +212,7 @@
       window.location.href = 'index.html';
     }
 
-    // Carrega módulos ao clicar na sidebar
+    // Carrega módulo e reinicia nome
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
