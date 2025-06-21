@@ -187,19 +187,15 @@
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
-    // verifica autenticação antes de permitir carregar módulos
     function checkAuth() {
       const token = localStorage.getItem('token');
       if (!token) window.location.href = 'index.html';
     }
 
-    // Carrega nome do usuário: primeiro cache, depois atualiza em background
     function initNomeUsuario() {
       const spanNome = document.getElementById("nome-usuario");
-      // mostra cache imediato
       const cached = localStorage.getItem('nome_usuario') || '';
       if (cached) spanNome.innerHTML = `<strong>${cached}</strong>`;
-      // busca atualização
       fetch(URL_API, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -227,7 +223,6 @@
       window.location.href = 'index.html';
     }
 
-    // rotas SPA: busca e injeta módulos na <div id="app">
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -237,6 +232,7 @@
           .then(res => res.text())
           .then(html => {
             document.getElementById('app').innerHTML = html;
+            initNomeUsuario();
           })
           .catch(err => console.error('Erro ao carregar módulo:', err));
       });
