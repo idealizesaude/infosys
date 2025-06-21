@@ -35,14 +35,14 @@
       z-index: 100;
     }
 
-      .topbar .logo {
+    .topbar .logo {
       display: flex;
       align-items: center;
       gap: 10px;
       cursor: pointer;
     }
 
-      .topbar .logo img {
+    .topbar .logo img {
       height: 50px;
     }
 
@@ -98,10 +98,9 @@
       color: white;
       display: flex;
       flex-direction: column;
-      padding-top: 0; /* reset to allow custom divider */
+      padding-top: 0;
     }
 
-    /* Divider between logo and first sidebar item */
     .sidebar-divider {
       width: 100%;
       height: 10px;
@@ -171,11 +170,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-divider"></div>
-    <a href="#"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
-    <a href="#"><i class="fas fa-tags"></i><span>Controle de Vendas Clube ID</span></a>
-    <a href="#"><i class="fas fa-user-slash"></i><span>Clientes Indesejáveis</span></a>
-    <a href="#"><i class="fas fa-sticky-note"></i><span>Anotações Importante</span></a>
-    <a href="#"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
+    <a href="#" data-module="modules/fechamento_caixa.html"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
+    <a href="#" data-module="modules/clube_id.html"><i class="fas fa-tags"></i><span>Controle de Vendas Clube ID</span></a>
+    <a href="#" data-module="modules/clientes_indesejaveis.html"><i class="fas fa-user-slash"></i><span>Clientes Indesejáveis</span></a>
+    <a href="#" data-module="modules/anotacoes_importantes.html"><i class="fas fa-sticky-note"></i><span>Anotações Importante</span></a>
+    <a href="#" data-module="modules/relatorios.html"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
     <a href="configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
 
@@ -188,10 +187,37 @@
   <script>
     const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
 
+    // verifica autenticação antes de permitir carregar módulos
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      if (!token) window.location.href = 'index.html';
+    }
+
+    // Carrega nome do usuário direto da planilha via API
     async function carregarNomeUsuario() {
       const spanNome = document.getElementById("nome-usuario");
-      const nomeLocal = localStorage.getItem("nome_usuario");
-      if (nomeLocal) spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(URL_API, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({action: 'usuario', token})
+        });
+        const text = await res.text();
+        if (text.startsWith('{')) {
+          const data = JSON.parse(text);
+          const nome = data.nome?.trim() || data.email;
+          spanNome.innerHTML = `<strong>${nome}</strong>`;
+          localStorage.setItem('nome_usuario', nome);
+        } else {
+          const stored = localStorage.getItem('nome_usuario') || '';
+          spanNome.innerHTML = `<strong>${stored}</strong>`;
+        }
+      } catch (e) {
+        console.error('Erro ao buscar nome do usuário:', e);
+        const stored = localStorage.getItem('nome_usuario') || '';
+        spanNome.innerHTML = `<strong>${stored}</strong>`;
+      }
     }
 
     function toggleMenu() {
@@ -204,13 +230,30 @@
       window.location.href = 'index.html';
     }
 
+    // rotas SPA: busca e injeta módulos na <div class="main">
+    document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        checkAuth();
+        const modulePath = link.getAttribute('data-module');
+        fetch(modulePath)
+          .then(res => res.text())
+          .then(html => {
+            document.querySelector('.main').innerHTML = html;
+          })
+          .catch(err => console.error('Erro ao carregar módulo:', err));
+      });
+    });
+
     document.addEventListener("click", event => {
       const dropdown = document.getElementById("dropdown");
       const userToggle = document.getElementById("user-toggle");
       if (!userToggle.contains(event.target)) dropdown.style.display = "none";
     });
 
-    window.addEventListener("load", carregarNomeUsuario);
+    window.addEventListener("load", () => {
+      carregarNomeUsuario();
+    });
   </script>
 </body>
 </html>
