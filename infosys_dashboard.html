@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InfoSys - Página Inicial</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -43,8 +43,8 @@
     }
     .topbar .user-menu {
       position: relative;
-      cursor: pointer;
       margin-right: 3rem;
+      cursor: pointer;
     }
     .topbar .user-name {
       display: flex;
@@ -95,17 +95,14 @@
       height: 10px;
       background: var(--rosa);
       margin-bottom: 0.5rem;
-      box-sizing: border-box;
     }
     .sidebar a {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
       padding: 0.8rem 1.5rem;
       text-decoration: none;
       color: white;
-      box-sizing: border-box;
     }
     .sidebar a:hover {
       background-color: #2fa3e6;
@@ -115,36 +112,32 @@
       padding: 1rem;
       margin-top: 60px;
     }
-    .chart-placeholder {
-      background: white;
-      margin-top: 2rem;
-      padding: 2rem;
-      border-radius: 10px;
-      text-align: center;
-      color: var(--cinza-escuro);
-      font-style: italic;
-    }
   </style>
 </head>
 <body>
-  <!-- Segurança: redireciona se não autenticado -->
+  <!-- Segurança: redireciona para login se não autenticado -->
   <script>
     (function() {
       const token = localStorage.getItem('token');
-      if (location.protocol !== 'file:' && !location.pathname.endsWith('index.html') && !token) {
+      if (
+        location.protocol !== 'file:' &&
+        !location.pathname.endsWith('index.html') &&
+        !token
+      ) {
         window.location.href = 'index.html';
       }
     })();
   </script>
 
+  <!-- Topbar -->
   <div class="topbar">
     <div class="logo" onclick="window.location.href='infosys_dashboard.html'">
       <img src="Horizontal-Branco-SemFundo.png" alt="Idealize Logo">
     </div>
     <div class="user-menu" onclick="toggleMenu()">
       <div class="user-name">
-        <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
-        <span id="nome-usuario"><strong>Carregando…</strong></span>
+        <i class="fas fa-user"></i>
+        <span id="nome-usuario"><strong>Carregando...</strong></span>
       </div>
       <div class="user-dropdown" id="dropdown">
         <a href="gerenciar_conta.html">Gerenciar conta</a>
@@ -153,6 +146,7 @@
     </div>
   </div>
 
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-divider"></div>
     <a href="#" data-module="modules/fechamento_caixa.html"><i class="fas fa-cash-register"></i><span>Fechamento de Caixa</span></a>
@@ -163,26 +157,26 @@
     <a href="#" data-module="modules/configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
 
+  <!-- Conteúdo principal -->
   <div class="main" id="app">
-    <div class="chart-placeholder">
-      [Área para gráfico de desempenho mensal - a ser integrado com JS futuramente]
+    <div style="font-style: italic; color: var(--cinza-escuro);">
+      Selecione uma opção na barra lateral.
     </div>
   </div>
 
   <script>
-    const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+    const URL_API = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec';
 
+    // Verifica autenticação
     function checkAuth() {
-      const token = localStorage.getItem('token');
-      if (!token) window.location.href = 'index.html';
+      if (!localStorage.getItem('token')) window.location.href = 'index.html';
     }
 
+    // Carrega e atualiza nome do usuário
     function initNomeUsuario() {
-      const nomeUsuario = localStorage.getItem('nome_usuario') || '';
+      const nomeCache = localStorage.getItem('nome_usuario') || '';
       document.querySelectorAll('#nome-usuario').forEach(el => {
-        el.innerHTML = nomeUsuario
-          ? `<strong>${nomeUsuario}</strong>`
-          : `<strong>Carregando…</strong>`;
+        el.innerHTML = nomeCache ? `<strong>${nomeCache}</strong>` : `<strong>Carregando...</strong>`;
       });
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -202,41 +196,45 @@
           localStorage.setItem('nome_usuario', nome);
         }
       })
-      .catch(err => console.error('Erro ao atualizar nome:', err));
+      .catch(console.error);
     }
 
+    // Toggle dropdown do usuário
     function toggleMenu() {
-      const dropdown = document.getElementById("dropdown");
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      const dd = document.getElementById('dropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
     }
 
+    // Logout
     function logout() {
       localStorage.clear();
       window.location.href = 'index.html';
     }
 
-    // carrega módulo e reinicia topbar
+    // Carrega módulos ao clicar na sidebar
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         checkAuth();
-        fetch(link.dataset.module)
-          .then(res => res.text())
+        fetch(link.getAttribute('data-module'))
+          .then(r => r.text())
           .then(html => {
             document.getElementById('app').innerHTML = html;
             initNomeUsuario();
           })
-          .catch(err => console.error('Erro ao carregar módulo:', err));
+          .catch(console.error);
       });
     });
 
-    document.addEventListener("click", event => {
-      const dropdown = document.getElementById("dropdown");
-      const userMenu = document.querySelector(".user-menu");
-      if (!userMenu.contains(event.target)) dropdown.style.display = "none";
+    // Fecha dropdown ao clicar fora
+    document.addEventListener('click', e => {
+      if (!document.querySelector('.user-menu').contains(e.target)) {
+        document.getElementById('dropdown').style.display = 'none';
+      }
     });
 
-    window.addEventListener("load", () => {
+    // Inicialização
+    window.addEventListener('load', () => {
       checkAuth();
       initNomeUsuario();
     });
