@@ -159,7 +159,7 @@
     <div class="user-menu" onclick="toggleMenu()">
       <div class="user-name" id="user-toggle">
         <img src="logo_usuario_rosa.png" alt="Usuário" width="28">
-        <span id="nome-usuario"><strong>Carregando...</strong></span>
+        <span id="nome-usuario"></span>
       </div>
       <div class="user-dropdown" id="dropdown">
         <a href="gerenciar_conta.html">Gerenciar conta</a>
@@ -178,7 +178,7 @@
     <a href="configuracoes.html"><i class="fas fa-cogs"></i><span>Configurações</span></a>
   </aside>
 
-  <div class="main">
+  <div class="main" id="app">
     <div class="chart-placeholder">
       [Área para gráfico de desempenho mensal - a ser integrado com JS futuramente]
     </div>
@@ -193,31 +193,28 @@
       if (!token) window.location.href = 'index.html';
     }
 
-    // Carrega nome do usuário direto da planilha via API
-    async function carregarNomeUsuario() {
+    // Carrega nome do usuário: primeiro cache, depois atualiza em background
+    function initNomeUsuario() {
       const spanNome = document.getElementById("nome-usuario");
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(URL_API, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          body: new URLSearchParams({action: 'usuario', token})
-        });
-        const text = await res.text();
+      // mostra cache imediato
+      const cached = localStorage.getItem('nome_usuario') || '';
+      if (cached) spanNome.innerHTML = `<strong>${cached}</strong>`;
+      // busca atualização
+      fetch(URL_API, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({action: 'usuario', token: localStorage.getItem('token')})
+      })
+      .then(r => r.text())
+      .then(text => {
         if (text.startsWith('{')) {
           const data = JSON.parse(text);
           const nome = data.nome?.trim() || data.email;
           spanNome.innerHTML = `<strong>${nome}</strong>`;
           localStorage.setItem('nome_usuario', nome);
-        } else {
-          const stored = localStorage.getItem('nome_usuario') || '';
-          spanNome.innerHTML = `<strong>${stored}</strong>`;
         }
-      } catch (e) {
-        console.error('Erro ao buscar nome do usuário:', e);
-        const stored = localStorage.getItem('nome_usuario') || '';
-        spanNome.innerHTML = `<strong>${stored}</strong>`;
-      }
+      })
+      .catch(err => console.error('Erro atualizando nome:', err));
     }
 
     function toggleMenu() {
@@ -230,7 +227,7 @@
       window.location.href = 'index.html';
     }
 
-    // rotas SPA: busca e injeta módulos na <div class="main">
+    // rotas SPA: busca e injeta módulos na <div id="app">
     document.querySelectorAll('.sidebar a[data-module]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -239,7 +236,7 @@
         fetch(modulePath)
           .then(res => res.text())
           .then(html => {
-            document.querySelector('.main').innerHTML = html;
+            document.getElementById('app').innerHTML = html;
           })
           .catch(err => console.error('Erro ao carregar módulo:', err));
       });
@@ -252,7 +249,8 @@
     });
 
     window.addEventListener("load", () => {
-      carregarNomeUsuario();
+      checkAuth();
+      initNomeUsuario();
     });
   </script>
 </body>
