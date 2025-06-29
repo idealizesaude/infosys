@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciar Conta - InfoSys</title>
+
+  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
+  <script src="/js/seguranca.js" defer></script>
+
+  <!-- monitoramento de inatividade -->
+  <script src="/js/inatividade.js" defer></script>
+
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self';
+          style-src 'self' 'unsafe-inline';
+          img-src 'self' data:;
+          connect-src 'self'
+            https://script.google.com
+            https://script.googleusercontent.com;
+        ">
+
+  <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
+  <link rel="stylesheet" href="../../css/header.css" />
+  <link rel="stylesheet" href="../../css/gerenciar-conta.css" />
+</head>
+<body>
+  
+  <!-- Header dinâmico -->
+  <div id="site-header"></div>
+
+  <!-- Conteúdo principal -->
+  <main class="container">
+    <h2>Gerenciar Conta</h2>
+
+    <label for="nome">Nome</label>
+    <input type="text" id="nome" />
+
+    <label for="email">E-mail</label>
+    <input type="email" id="email" class="readonly" readonly />
+
+    <button id="btn-atualizar">Atualizar Dados</button>
+
+    <h2 style="margin-top: 2.5rem;">Acesso</h2>
+    <button id="btn-alterar-senha">Alterar senha</button>
+  </main>
+
+  <script type="module" src="../../js/header.js"></script>
+  <script type="module" src="../../js/gerenciar-conta.js"></script>
+</body>
+</html>

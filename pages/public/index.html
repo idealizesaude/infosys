@@ -5,45 +5,59 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Content Security Policy -->
+  <!-- Content Security Policy ajustada -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
-          script-src 'self';
+          script-src 'self' 'unsafe-inline';
           style-src 'self';
           img-src 'self' data:;
-          connect-src 'self' https://script.google.com https://script.googleusercontent.com https://api.ipify.org;
+          connect-src 'self'
+            https://script.google.com
+            https://script.googleusercontent.com
+            https://api.ipify.org;
         ">
 
   <title>Login – InfoSys Portal Idealize Saúde</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <!-- favicon (subindo duas pastas) -->
+  <link rel="icon" href="../../assets/images/favicon.png" />
 
   <!-- CSS externo -->
-  <link rel="stylesheet" href="styles/login.css" />
+  <link rel="stylesheet" href="../../css/login.css" />
   <!-- JS como módulo ES6 -->
-  <script type="module" src="js/login.js" defer></script>
+  <script type="module" src="../../js/login.js" defer></script>
 </head>
 <body>
   <div class="hero">
     <div>
-      <img src="Vertical-Azul-SemFundo.png" alt="Idealize Saúde Logo" />
+      <img src="../../assets/images/Vertical-Azul-SemFundo.png"
+           alt="Idealize Saúde Logo" />
       <h1>InfoSys Portal Idealize Saúde</h1>
     </div>
   </div>
 
   <div class="panel">
-    <img src="Horizontal-Branco-SemFundo.png" class="logo" alt="Idealize Saúde Logo" />
+    <img src="../../assets/images/Horizontal-Branco-SemFundo.png"
+         class="logo"
+         alt="Idealize Saúde Logo" />
     <h2>Acesso ao Sistema</h2>
 
-    <div id="msg" class="msg" role="alert" aria-live="assertive"></div>
+    <div id="msg"
+         class="msg"
+         role="alert"
+         aria-live="assertive"></div>
 
     <form id="frmLogin">
       <div class="field">
         <label for="email" class="sr-only">E-mail corporativo</label>
         <span class="icon-left">
           <!-- ícone usuário -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="2">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
                   d="M12 12c2.761 0 5-2.462 5-5.5S14.761 1 12 1
                      7 3.462 7 6.5 9.239 12 12 12z
                      M3.5 23c-.276 0-.5-.196-.5-.437C3 18.253
@@ -63,7 +77,10 @@
         <label for="senha" class="sr-only">Senha</label>
         <span class="icon-left">
           <!-- ícone cadeado -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="2">
             <rect x="3" y="11" width="18" height="11" rx="2"/>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
@@ -79,8 +96,12 @@
                 id="togglePass"
                 aria-label="Mostrar senha">
           <!-- ícone olho -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="2">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
                   d="M2.458 12C3.732 7.943 7.523 5 12 5
                      c4.477 0 8.268 2.943 9.542 7
                      -1.274 4.057-5.065 7-9.542 7

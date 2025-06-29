@@ -2,23 +2,24 @@ import { API_URL } from './config.js';
 import { obterIP, esqueciSenha } from './utils.js';
 
 // Elementos do DOM
-const frm       = document.getElementById('frmLogin');
-const msg       = document.getElementById('msg');
-const passInput = document.getElementById('senha');
-const toggleBtn = document.getElementById('togglePass');
-const loading   = document.getElementById('loading');
-const submitBtn = document.getElementById('submitBtn');
-const forgotLink= document.getElementById('forgotLink');
-let mostrando   = false;
+const frm        = document.getElementById('frmLogin');
+const msg        = document.getElementById('msg');
+const passInput  = document.getElementById('senha');
+const toggleBtn  = document.getElementById('togglePass');
+const loading    = document.getElementById('loading');
+const submitBtn  = document.getElementById('submitBtn');
+const forgotLink = document.getElementById('forgotLink');
 
-// Toggle da visibilidade da senha
+let mostrando = false;
+
+// Alterna visibilidade da senha
 function toggleSenha() {
   mostrando = !mostrando;
   passInput.type = mostrando ? 'text' : 'password';
   toggleBtn.querySelector('svg').style.opacity = mostrando ? 0.4 : 1;
 }
 
-// Submissão do formulário de login
+// Trata o envio do formulário de login
 async function handleSubmit(e) {
   e.preventDefault();
   msg.textContent = '';
@@ -32,6 +33,7 @@ async function handleSubmit(e) {
 
   try {
     const res = await fetch(API_URL, { method: 'POST', body: fd });
+
     loading.style.display = 'none';
     loading.setAttribute('aria-hidden', 'true');
     loading.removeAttribute('aria-busy');
@@ -45,13 +47,17 @@ async function handleSubmit(e) {
     const txt = await res.text();
     if (txt.startsWith('{')) {
       const data = JSON.parse(txt);
+
+      // Armazena token, nível e nome no localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('nivel', data.nivel);
-      window.location.assign(
-        data.precisaTrocar
-          ? 'alterar-senha.html'
-          : 'infosys_dashboard.html'
-      );
+      localStorage.setItem('nome_usuario', data.nome || 'Usuário');
+
+      const redirectTo = data.precisaTrocar
+        ? 'alterar-senha.html'
+        : '../app/infosys-dashboard.html';
+
+      window.location.assign(redirectTo);
     } else {
       msg.textContent = txt.replace(/_/g, ' ');
     }
@@ -64,7 +70,7 @@ async function handleSubmit(e) {
   }
 }
 
-// Event listeners
+// Associa eventos
 toggleBtn.addEventListener('click', toggleSenha);
 frm.addEventListener('submit', handleSubmit);
 forgotLink.addEventListener('click', e => {
@@ -72,7 +78,7 @@ forgotLink.addEventListener('click', e => {
   esqueciSenha();
 });
 
-// Inicialização
+// Foca no campo de e-mail ao carregar
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('email').focus();
 });
