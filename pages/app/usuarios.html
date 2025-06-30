@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuários – InfoSys</title>
+
+  <!-- Segurança -->
+  <script src="/js/seguranca.js" defer></script>
+  <script src="/js/inatividade.js" defer></script>
+
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self' 'unsafe-inline';
+          style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+          img-src 'self' data:;
+          connect-src 'self'
+                      https://script.google.com
+                      https://script.googleusercontent.com
+                      https://api.ipify.org;
+        ">
+
+  <link rel="stylesheet" href="/css/header.css" />
+  <script src="/js/header.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/usuarios.css" />
+  <script type="module" src="/js/usuarios.js" defer></script>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <div class="container">
+    <h2>Usuários Cadastrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>E-mail</th>
+          <th>Nível</th>
+          <th>Status</th>
+          <th>Último Login</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="corpo-tabela">
+        <tr><td colspan="5">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- modal de edição -->
+  <div class="modal" id="modal-edicao">
+    <div class="modal-content">
+      <h3>Editar Usuário</h3>
+      <label for="modal-nivel">Nível</label>
+      <select id="modal-nivel"></select>
+      <label for="modal-status">Status</label>
+      <select id="modal-status">
+        <option>Ativo</option>
+        <option>Inativo</option>
+      </select>
+      <div class="actions">
+        <button type="button" class="cancelar" id="btn-cancelar">Cancelar</button>
+        <button type="button" class="salvar" id="btn-salvar">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal de sucesso -->
+  <div class="modal" id="modal-sucesso">
+    <div class="modal-content sucesso">
+      <h3>Alterações Salvas</h3>
+      <p><strong class="email"></strong></p>
+      <p>Nível: <strong class="nivel"></strong></p>
+      <p>Status: <strong class="status"></strong></p>
+      <button type="button" class="fechar" id="btn-fechar-sucesso">Fechar</button>
+    </div>
+  </div>
+
+  <!-- modal de permissão negada -->
+  <div class="modal" id="modal-permissao">
+    <div class="modal-content sucesso">
+      <h3>Acesso Negado</h3>
+      <p>Você não tem permissão para editar este usuário.</p>
+      <button type="button" class="fechar" id="btn-fechar-permissao">Fechar</button>
+    </div>
+  </div>
+</body>
+</html>

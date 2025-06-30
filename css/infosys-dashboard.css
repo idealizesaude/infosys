@@ -1,0 +1,29 @@
+/* assets/css/infosys-dashboard.css */
+:root {
+  --azul: #38b6ff;
+  --rosa: #eb0d9f;
+  --cinza-claro: #f5f5f5;
+  --cinza-escuro: #444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--cinza-claro);
+}
+
+/*  MAIN CONTENT  */
+.main {
+  margin-left: 240px;      /* reserva a largura da sidebar */
+  margin-top: 60px;        /* reserva a altura do header */
+  padding: 1rem;
+}
+
+.main .placeholder {
+  font-style: italic;
+  color: var(--cinza-escuro);
+}

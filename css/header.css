@@ -1,0 +1,62 @@
+/* assets/css/header.css */
+:root {
+  --azul: #38b6ff;
+  --rosa: #eb0d9f;
+}
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.topbar .logo img {
+  height: 50px;
+  cursor: pointer;
+}
+
+.user-menu {
+  position: relative;
+  cursor: pointer;
+  margin-right: 3rem;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--rosa);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 60px; right: 0;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  min-width: 180px;
+  z-index: 1001;
+}
+
+.user-dropdown a {
+  display: block;
+  padding: .75rem 1rem;
+  text-decoration: none;
+  color: #333;
+}
+
+.user-dropdown a:hover {
+  background: #eee;
+}

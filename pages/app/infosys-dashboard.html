@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InfoSys – Dashboard</title>
+
+  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
+  <script src="/js/seguranca.js" defer></script>
+
+  <!-- monitoramento de inatividade -->
+  <script src="/js/inatividade.js" defer></script>
+
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+
+  <!-- HEADER PADRÃO -->
+  <link rel="stylesheet" href="/css/header.css" />
+  <script src="/js/header.js" defer></script>
+  <!-- /HEADER -->
+
+  <!-- Font Awesome (ícones) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- SIDEBAR PADRÃO -->
+  <link rel="stylesheet" href="/css/sidebar.css" />
+  <script src="/js/sidebar.js" defer></script>
+  <!-- /SIDEBAR -->
+
+  <!-- CSS específico da Dashboard -->
+  <link rel="stylesheet" href="/css/infosys-dashboard.css" />
+
+  <!-- JS específico da Dashboard -->
+  <script type="module" src="/js/infosys-dashboard.js" defer></script>
+</head>
+<body>
+  
+  <!-- aqui o header padrão será injetado -->
+  <div id="site-header"></div>
+
+  <!-- aqui o sidebar padrão será injetado -->
+  <div id="site-sidebar"></div>
+
+  <!-- área de conteúdo dinâmico -->
+  <div class="main" id="app">
+    <div class="placeholder">Selecione uma opção na barra lateral.</div>
+  </div>
+</body>
+</html>
