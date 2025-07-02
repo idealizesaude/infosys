@@ -3,7 +3,7 @@ const URL_API = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5W
 
 function checkAuth() {
   if (!localStorage.getItem('token')) {
-    window.location.href = '/pages/public/index.html';
+    window.location.href = '../../index.html';
   }
 }
 

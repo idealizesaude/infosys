@@ -5,6 +5,6 @@
 
   // Se não estiver autenticado, redireciona pro login
   if (!token) {
-    window.location.href = '/pages/public/index.html';
+    window.location.href = '../../index.html';
   }
 })();

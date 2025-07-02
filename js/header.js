@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('logout').addEventListener('click', e => {
     e.preventDefault();
     localStorage.clear();
-    window.location.href = '../public/index.html';
+    window.location.href = '../../index.html';
   });
 
   // 5) fecha dropdown ao clicar fora

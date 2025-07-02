@@ -54,8 +54,8 @@ async function handleSubmit(e) {
       localStorage.setItem('nome_usuario', data.nome || 'Usuário');
 
       const redirectTo = data.precisaTrocar
-        ? 'alterar-senha.html'
-        : '../app/infosys-dashboard.html';
+        ? 'pages/public/alterar-senha.html'
+        : 'pages/app/infosys-dashboard.html';
 
       window.location.assign(redirectTo);
     } else {
