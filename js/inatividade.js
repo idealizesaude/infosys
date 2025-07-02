@@ -132,7 +132,7 @@ function fecharModal() {
 // Executa logout e redireciona
 function logout() {
   localStorage.clear();
-  window.location.href = '/pages/public/index.html';
+  window.location.href = '../../pages/public/index.html';
 }
 
 // Iniciar ao carregar o script

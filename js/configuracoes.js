@@ -1,7 +1,7 @@
 // Redireciona se não autenticado
 const token = localStorage.getItem('token');
 if (!token) {
-  window.location.href = '../public/index.html';
+  window.location.href = '../../index.html';
 }
 
 // Preenche o nome do usuário no header (depois de header.js carregar)

@@ -5,6 +5,7 @@
 
   // Se não estiver autenticado, redireciona pro login
   if (!token) {
-    window.location.href = '../../index.html';
+    const ehLocal = location.protocol === 'file:';
+    window.location.href = ehLocal ? '../../index.html' : '/infosys/index.html';
   }
 })();

@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerenciar Conta - InfoSys</title>
 
-  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
-  <script src="/js/seguranca.js" defer></script>
+  <!-- Segurança: redireciona se não autenticado -->
+  <script src="../../js/seguranca.js" defer></script>
 
-  <!-- monitoramento de inatividade -->
-  <script src="/js/inatividade.js" defer></script>
+  <!-- Monitoramento de inatividade -->
+  <script src="../../js/inatividade.js" defer></script>
 
+  <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -22,13 +23,16 @@
             https://script.googleusercontent.com;
         ">
 
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="../../css/header.css" />
   <link rel="stylesheet" href="../../css/gerenciar-conta.css" />
 </head>
 <body>
   
-  <!-- Header dinâmico -->
+  <!-- Header dinâmico será injetado -->
   <div id="site-header"></div>
 
   <!-- Conteúdo principal -->
@@ -47,6 +51,7 @@
     <button id="btn-alterar-senha">Alterar senha</button>
   </main>
 
+  <!-- Scripts -->
   <script type="module" src="../../js/header.js"></script>
   <script type="module" src="../../js/gerenciar-conta.js"></script>
 </body>

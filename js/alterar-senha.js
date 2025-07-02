@@ -55,7 +55,7 @@ form.addEventListener('submit', async (e) => {
       if (status === 'OK') {
         alert(`Senha alterada (${forca.toLowerCase()}). Faça login novamente.`);
         localStorage.clear();
-        window.location.href = '../public/index.html';
+        window.location.href = '../../index.html';
         return;
       }
       msg.textContent = status.replace(/_/g, ' ');

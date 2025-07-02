@@ -141,7 +141,8 @@ document.addEventListener('click', e => {
 
 window.addEventListener('load', () => {
   if (!localStorage.getItem('token')) {
-    window.location.href = '/pages/public/index.html';
+    const ehLocal = location.protocol === 'file:';
+    window.location.href = ehLocal ? '../../index.html' : '/infosys/pages/public/index.html';
     return;
   }
 

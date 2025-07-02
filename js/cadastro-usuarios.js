@@ -14,7 +14,7 @@ function toggleMenu() {
 // logout
 function logout() {
   localStorage.clear();
-  window.location.href = '../public/index.html';
+  window.location.href = '../../index.html';
 }
 
 document.addEventListener('click', e => {

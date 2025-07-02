@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) injeta o HTML do header
   try {
-    const resp = await fetch('/assets/fragments/header.html');
+    const resp = await fetch('../../assets/fragments/header.html');
     if (!resp.ok) throw new Error(`Erro ${resp.status}`);
     const html = await resp.text();
     document.getElementById('site-header').innerHTML = html;

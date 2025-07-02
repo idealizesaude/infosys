@@ -79,6 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-atualizar").addEventListener("click", atualizarNome);
 
   document.getElementById("btn-alterar-senha").addEventListener("click", () => {
-    window.location.href = "../public/alterar-senha.html"; // Corrigido!
+    window.location.href = "../../pages/public/alterar-senha.html"; // Corrigido!
   });
 });
