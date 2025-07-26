@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // 1.1) injeta CSS do FontAwesome para exibir os ícones do sidebar
+  const faLink = document.createElement('link');
+  faLink.rel = 'stylesheet';
+  faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+  document.head.appendChild(faLink);
+
   // 2) exibe nome do usuário já salvo no localStorage
   const spanNome = document.getElementById('nome-usuario');
   const nome     = localStorage.getItem('nome_usuario');
@@ -33,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // 5) fecha dropdown ao clicar fora
-  document.addEventListener('click', e => {
+  window.addEventListener('click', e => {
     if (!userMenu.contains(e.target)) {
       dropdown.style.display = 'none';
     }

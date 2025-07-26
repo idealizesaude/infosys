@@ -4,60 +4,123 @@
   --cinza-claro: #f9f9f9;
   --cinza-borda: #ccc;
 }
-*,
-*::before,
-*::after { box-sizing: border-box; margin:0; padding:0; }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: var(--cinza-claro);
-  margin: 0;
-  padding-top: 60px; /* espaço para a topbar fixa */
 }
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; height: 60px;
-  background: #fff; display: flex;
-  justify-content: space-between; align-items: center;
-  padding: 0 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-.topbar .logo img { height: 50px; cursor: pointer; }
-.topbar .user-menu { position: relative; cursor: pointer; margin-right: 3rem; }
-.topbar .user-name {
-  display: flex; align-items: center; gap: .5rem;
-  color: var(--rosa); font-weight: bold;
-}
-.user-dropdown {
-  display: none; position: absolute; top: 60px; right: 0;
-  background: #fff; border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15); min-width: 180px;
-  z-index: 1001;
-}
-.user-dropdown a {
-  display: block; padding: .75rem 1rem;
-  text-decoration: none; color: #333;
-}
-.user-dropdown a:hover { background: #eee; }
 
-.container {
-  max-width: 800px; margin: 2rem auto;
-  background: #fff; border-radius: 8px;
-  padding: 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+/* ------------------------------------------------------------
+   Espaço reservado para header fixo + sidebar
+   ------------------------------------------------------------ */
+.main-content {
+  margin-left: 250px;   /* largura do sidebar */
+  margin-top: 60px;     /* altura do header */
+  padding: 2rem;
 }
-.container h2 { color: var(--azul); margin-bottom: 1.5rem; }
+
+/* ------------------------------------------------------------
+   Container centralizado dentro de .main-content
+   ------------------------------------------------------------ */
+.main-content .container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ------------------------------------------------------------
+   Título e Informativo
+   ------------------------------------------------------------ */
+.container h2 {
+  color: var(--azul);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
 .info {
-  background: #e9f5ff; padding: 1rem;
+  background: #e9f5ff;
+  padding: 1rem;
   border-left: 4px solid var(--azul);
-  margin-bottom: 1rem; font-size: .95rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
 }
-form { display: flex; flex-direction: column; gap: 1rem; }
-label { font-weight: bold; }
-input, select {
-  padding: .5rem; border: 1px solid var(--cinza-borda);
-  border-radius: 4px; font-size: 1rem;
+
+/* ------------------------------------------------------------
+   Formulário
+   ------------------------------------------------------------ */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-button {
-  background: var(--azul); color: #fff;
-  padding: .8rem; border: none; border-radius: 5px;
-  font-weight: bold; cursor: pointer;
+
+.field {
+  display: flex;
+  flex-direction: column;
 }
-button:hover { background: #2fa3e6; }
+
+.field label {
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+
+.field input,
+.field select {
+  padding: 0.6rem;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+button[type="submit"] {
+  background: var(--azul);
+  color: #fff;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button[type="submit"]:hover {
+  background: #2fa3e6;
+}
+
+/* ------------------------------------------------------------
+   Ajustes para telas pequenas
+   ------------------------------------------------------------ */
+@media (max-width: 600px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .main-content .container {
+    margin: 0;
+    padding: 1rem;
+  }
+
+  .container h2 {
+    font-size: 1.25rem;
+  }
+
+  .info {
+    font-size: 0.9rem;
+  }
+
+  button[type="submit"] {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+}

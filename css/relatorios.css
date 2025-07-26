@@ -18,18 +18,18 @@ body {
 
 /* ------------------------------------------------------------
    Espaço reservado para header fixo + sidebar
-   ------------------------------------------------------------ */
+------------------------------------------------------------ */
 .main-content {
-  margin-left: 250px;   /* largura do sidebar */
+  margin-left: 240px;   /* largura do sidebar */
   margin-top: 60px;     /* altura do header */
   padding: 2rem;
 }
 
 /* ------------------------------------------------------------
    Container centralizado dentro de .main-content
-   ------------------------------------------------------------ */
+------------------------------------------------------------ */
 .main-content .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   background: #fff;
   border-radius: 8px;
@@ -44,33 +44,8 @@ body {
 }
 
 /* ------------------------------------------------------------
-   Box de opções (botões)
-   ------------------------------------------------------------ */
-.option-box {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.option-box a {
-  background-color: var(--azul);
-  color: #fff;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease;
-}
-
-.option-box a:hover {
-  background-color: #2fa3e6;
-}
-
-/* ------------------------------------------------------------
    Ajustes para telas pequenas
-   ------------------------------------------------------------ */
+------------------------------------------------------------ */
 @media (max-width: 600px) {
   .main-content {
     margin-left: 0;    /* sidebar pode virar drawer */
@@ -84,16 +59,5 @@ body {
 
   .container h2 {
     font-size: 1.25rem;
-  }
-
-  .option-box {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .option-box a {
-    text-align: center;
-    font-size: 0.95rem;
-    padding: 0.7rem;
   }
 }

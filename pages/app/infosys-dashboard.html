@@ -3,49 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InfoSys – Dashboard</title>
+  <title>Dashboard – InfoSys</title>
 
-  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
-  <script src="../../js/seguranca.js" defer></script>
-
-  <!-- monitoramento de inatividade -->
-  <script src="../../js/inatividade.js" defer></script>
-
-  <!-- favicon -->
-  <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
-
-  <!-- HEADER PADRÃO -->
+  <!-- 🎨 Estilos -->
+  <link rel="icon" href="../../assets/images/favicon.png" />
   <link rel="stylesheet" href="../../css/header.css" />
-  <script src="../../js/header.js" defer></script>
-  <!-- /HEADER -->
-
-  <!-- Font Awesome (ícones) -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-
-  <!-- SIDEBAR PADRÃO -->
   <link rel="stylesheet" href="../../css/sidebar.css" />
-  <script src="../../js/sidebar.js" defer></script>
-  <!-- /SIDEBAR -->
-
-  <!-- CSS específico da Dashboard -->
   <link rel="stylesheet" href="../../css/infosys-dashboard.css" />
+  <link rel="stylesheet" href="../../css/alertas.css" />
 
-  <!-- JS específico da Dashboard -->
-  <script type="module" src="../../js/infosys-dashboard.js" defer></script>
+  <!-- 🔒 Segurança e CSP -->
+  <script src="../../js/csp.js"></script>
+  <script src="../../js/seguranca.js" defer></script>
+  <script src="../../js/inatividade.js" defer></script>
+  <script src="../../js/header.js" defer></script>
+  <script src="../../js/sidebar.js" defer></script>
 </head>
 <body>
-  <!-- aqui o header padrão será injetado -->
+  <!-- Header dinâmico -->
   <div id="site-header"></div>
 
-  <!-- aqui o sidebar padrão será injetado -->
+  <!-- Sidebar dinâmico -->
   <div id="site-sidebar"></div>
 
-  <!-- área de conteúdo dinâmico -->
-  <div class="main" id="app">
-    <div class="placeholder">Selecione uma opção na barra lateral.</div>
-  </div>
+  <!-- Conteúdo principal -->
+  <main class="main-content">
+    <div class="container">
+      <h2>Dashboard</h2>
+      <div class="placeholder">Selecione uma opção na barra lateral.</div>
+    </div>
+  </main>
+
+  <!-- 📜 Script específico desta página -->
+  <script type="module" src="../../js/infosys-dashboard.js" defer></script>
 </body>
 </html>

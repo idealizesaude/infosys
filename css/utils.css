@@ -1,0 +1,27 @@
+/* Spinner Overlay */
+#spinner-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.7);
+  display: none;               /* fica oculto por padrão */
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+/* O próprio círculo giratório */
+#spinner-overlay .spinner {
+  border: 8px solid #f3f3f3;       /* cor de fundo do círculo */
+  border-top: 8px solid #38b6ff;    /* cor da “faixa” que gira */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

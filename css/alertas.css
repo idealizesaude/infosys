@@ -1,0 +1,91 @@
+/* ------------------------------------------------------------------
+ * ALERTAS – estilos globais para janelas modais de feedback
+ * ------------------------------------------------------------------
+ *  ✅  Centra a caixa no viewport
+ *  ✅  Camada de overlay com 45 % de opacidade
+ *  ✅  Cores alinhadas com a paleta “Idealyze Saúde”
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* tons básicos (fácil trocar o tema depois) */
+  --cor-primaria: #38b6ff;     /* azul corporativo */
+  --cor-perigo: #ff4d4d;       /* vermelho (se for preciso) */
+  --cor-overlay: rgba(0, 0, 0, 0.45);
+}
+
+/* ------------------------------------------------------------
+ * SOBREPOSIÇÃO – cobre toda a tela e centraliza a .alert-box
+ * ------------------------------------------------------------ */
+.alert-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--cor-overlay);
+  z-index: 9999;
+}
+
+/* ------------------------------------------------------------
+ * CAIXA
+ * ------------------------------------------------------------ */
+.alert-box {
+  width: 90%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 1.8rem 1.6rem 1.4rem;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.alert-box h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.alert-box p {
+  margin: 0 0 1.4rem;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.35;
+}
+
+/* ------------------------------------------------------------
+ * BOTÕES
+ * ------------------------------------------------------------ */
+.alert-btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.alert-btn {
+  appearance: none;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--cor-primaria);
+  color: #fff;
+  transition: opacity 0.18s ease-in-out, transform 0.18s ease-in-out;
+}
+
+.alert-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.alert-btn:active {
+  transform: translateY(0);
+  opacity: 0.75;
+}
+
+.alert-btn-no {
+  background: #aaa;
+}

@@ -5,19 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Content Security Policy ajustada -->
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src 'self' 'unsafe-inline';
-          style-src 'self';
-          img-src 'self' data:;
-          connect-src 'self'
-            https://script.google.com
-            https://script.googleusercontent.com
-            https://api.ipify.org;
-        ">
-
+  <!-- CSP via JavaScript (centralizado) -->
+  <script src="js/csp.js"></script>
+  
   <title>Login – InfoSys Portal Idealize Saúde</title>
 
   <!-- Caminhos do fivicon, css, js e imagens -->

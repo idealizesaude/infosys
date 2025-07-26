@@ -5,51 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cadastro de Usuários – InfoSys</title>
 
-  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
-  <script src="/js/seguranca.js" defer></script>
-
-  <!-- monitoramento de inatividade -->
-  <script src="/js/inatividade.js" defer></script>
-
-  <!-- Ícone do site -->
+  <!-- 🎨 Estilos -->
   <link rel="icon" href="../../assets/images/favicon.png" />
-
-  <!-- Header padrão -->
   <link rel="stylesheet" href="../../css/header.css" />
-  <script src="../../js/header.js" defer></script>
-
-  <!-- Estilo da página -->
+  <link rel="stylesheet" href="../../css/sidebar.css" />
   <link rel="stylesheet" href="../../css/cadastro-usuarios.css" />
+  <link rel="stylesheet" href="../../css/alertas.css" />
+  <link rel="stylesheet" href="../../css/utils.css" />
 
-  <!-- Script da página -->
+  <!-- 🔒 CSP + Segurança -->
+  <script src="../../js/csp.js"></script>
+  <script src="../../js/seguranca.js" defer></script>
+  <script src="../../js/inatividade.js" defer></script>
+
+  <!-- 🧩 Fragmentos e scripts globais -->
+  <script src="../../js/header.js" defer></script>
+  <script src="../../js/sidebar.js" defer></script>
+
+  <!-- 🛠️ Módulos desta página -->
+  <script type="module" src="../../js/spinner.js" defer></script>
+  <script type="module" src="../../js/alertas.js" defer></script>
+  <script type="module" src="../../js/perfis.js" defer></script>
   <script type="module" src="../../js/cadastro-usuarios.js" defer></script>
 </head>
 <body>
-  
-  <!-- Header será carregado dinamicamente -->
+  <!-- Header dinâmico -->
   <div id="site-header"></div>
 
+  <!-- Sidebar dinâmico -->
+  <div id="site-sidebar"></div>
+
   <!-- Conteúdo principal -->
-  <div class="container">
-    <h2>Cadastro de Novo Usuário</h2>
-    <div class="info">
-      O usuário receberá um e-mail com senha provisória e será obrigado a alterá-la no primeiro acesso.
+  <main class="main-content">
+    <div class="container">
+      <h2>Cadastro de Novo Usuário</h2>
+      <div class="info">
+        O usuário receberá um e-mail com senha provisória e será obrigado a alterá-la no primeiro acesso.
+      </div>
+
+      <form id="frmCadastroUsuarios">
+        <div class="field">
+          <label for="email">E-mail Corporativo</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="field">
+          <label for="nivel">Nível de Acesso</label>
+          <select id="nivel" name="nivel" required>
+            <option value="">Selecione...</option>
+            <!-- opções serão injetadas por perfis.js -->
+          </select>
+        </div>
+
+        <button type="submit">Cadastrar Usuário</button>
+      </form>
     </div>
-    <form id="frmCadastroUsuarios">
-      <label for="email">E-mail Corporativo</label>
-      <input type="email" id="email" name="email" required />
+  </main>
 
-      <label for="nivel">Nível de Acesso</label>
-      <select id="nivel" name="nivel" required>
-        <option value="">Selecione...</option>
-        <option value="BASICO">BÁSICO</option>
-        <option value="INTERMEDIARIO">INTERMEDIÁRIO</option>
-        <option value="AVANCADO">AVANÇADO</option>
-        <option value="MASTER">MASTER</option>
-      </select>
-
-      <button type="submit">Cadastrar Usuário</button>
-    </form>
+  <!-- Spinner Overlay (fallback) -->
+  <div id="spinner-overlay">
+    <div class="spinner"></div>
   </div>
 </body>
 </html>

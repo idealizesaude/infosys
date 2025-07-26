@@ -5,41 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Configurações – InfoSys</title>
 
-  <!-- Segurança: redireciona se não autenticado direciona para index.html -->
-  <script src="/js/seguranca.js" defer></script>
-
-  <!-- monitoramento de inatividade -->
-  <script src="/js/inatividade.js" defer></script>
-
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self';
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data:;
-          connect-src 'self' https://script.google.com https://script.googleusercontent.com https://api.ipify.org;
-        ">
-
-  <link rel="icon" type="image/png" href="../../assets/images/favicon.png" />
+  <!-- 🎨 Estilos -->
+  <link rel="icon" href="../../assets/images/favicon.png" />
   <link rel="stylesheet" href="../../css/header.css" />
   <link rel="stylesheet" href="../../css/sidebar.css" />
   <link rel="stylesheet" href="../../css/configuracoes.css" />
+  <link rel="stylesheet" href="../../css/alertas.css" />
+
+  <!-- 🔒 Segurança e CSP -->
+  <script src="../../js/csp.js"></script>
+  <script src="../../js/seguranca.js" defer></script>
+  <script src="../../js/inatividade.js" defer></script>
+  <script src="../../js/header.js" defer></script>
+  <script src="../../js/sidebar.js" defer></script>
 </head>
 <body>
-  <!-- Header e Sidebar padrões -->
+  <!-- Header dinâmico -->
   <div id="site-header"></div>
+
+  <!-- Sidebar dinâmico -->
   <div id="site-sidebar"></div>
 
-  <main class="container">
-    <h2>Configurações de Acesso</h2>
-    <div class="option-box">
-      <a href="usuarios.html">Usuários</a>
-      <a href="cadastro-usuarios.html">Cadastro de Usuários</a>
+  <!-- Conteúdo principal alinhado ao sidebar e header -->
+  <main class="main-content">
+    <div class="container">
+      <h2>Configurações de Acesso</h2>
+      <div class="option-box">
+        <a href="usuarios.html">Usuários</a>
+        <a href="cadastro-usuarios.html">Cadastro de Usuários</a>
+      </div>
     </div>
   </main>
 
-  <script type="module" src="../../js/header.js"></script>
-  <script type="module" src="../../js/sidebar.js"></script>
-  <script type="module" src="../../js/configuracoes.js"></script>
+  <!-- 📜 Script específico desta página -->
+  <script type="module" src="../../js/configuracoes.js" defer></script>
 </body>
 </html>

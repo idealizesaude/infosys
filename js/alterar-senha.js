@@ -1,3 +1,6 @@
+// alterar-senha.js
+import { showSuccess, showError } from './alertas.js';
+
 const URL = 'https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec';
 
 function togglePassword(button, input) {
@@ -13,7 +16,6 @@ const novaInput = document.getElementById('nova');
 const confInput = document.getElementById('conf');
 const strengthEl = document.getElementById('strength');
 const form = document.getElementById('f');
-const msg = document.getElementById('msg');
 
 togglePassword(document.getElementById('tog1'), novaInput);
 togglePassword(document.getElementById('tog2'), confInput);
@@ -35,10 +37,9 @@ novaInput.addEventListener('input', () => {
 // Submissão do formulário
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  msg.textContent = '';
 
   if (novaInput.value !== confInput.value) {
-    msg.textContent = 'Senhas não coincidem';
+    showError('Erro', 'Senhas não coincidem.');
     return;
   }
 
@@ -53,16 +54,22 @@ form.addEventListener('submit', async (e) => {
     if (txt.startsWith('{')) {
       const { status, forca } = JSON.parse(txt);
       if (status === 'OK') {
-        alert(`Senha alterada (${forca.toLowerCase()}). Faça login novamente.`);
-        localStorage.clear();
-        window.location.href = '../../index.html';
+        showSuccess(
+          'Senha alterada!',
+          `Senha alterada (${forca.toLowerCase()}). Faça login novamente.`,
+          () => {
+            localStorage.clear();
+            window.location.href = '../../index.html';
+          }
+        );
         return;
       }
-      msg.textContent = status.replace(/_/g, ' ');
+      showError('Erro', status.replace(/_/g, ' '));
     } else {
-      msg.textContent = txt.replace(/_/g, ' ');
+      showError('Erro', txt.replace(/_/g, ' '));
     }
   } catch {
-    msg.textContent = 'Erro de rede';
+    showError('Erro', 'Erro de rede');
   }
 });
+

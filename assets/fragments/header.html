@@ -1,16 +1,33 @@
 <!-- assets/fragments/header.html -->
 <div class="topbar">
+  <!-- Logo -->
   <a href="../../pages/app/infosys-dashboard.html" class="logo">
     <img src="../../assets/images/Horizontal-Branco-SemFundo.png" alt="Logo Idealize">
   </a>
-  <div class="user-menu" id="user-menu">
-    <div class="user-name">
-      <img src="../../assets/images/logo_usuario_rosa.png" alt="Usuário" width="28">
-      <span id="nome-usuario"><strong>Carregando...</strong></span>
+
+  <!-- Grupo à direita: ícone do usuário + hambúrguer -->
+  <div class="right-group">
+    <div class="user-menu" id="user-menu">
+      <div class="user-name">
+        <img src="../../assets/images/logo_usuario_rosa.png" alt="Usuário" width="28">
+        <span id="nome-usuario"><strong>Carregando...</strong></span>
+      </div>
+      <div class="user-dropdown" id="dropdown">
+        <a href="../../pages/app/gerenciar-conta.html">Gerenciar conta</a>
+        <a href="#" id="logout">Sair</a>
+      </div>
     </div>
-    <div class="user-dropdown" id="dropdown">
-      <a href="../../pages/app/gerenciar-conta.html">Gerenciar conta</a>
-      <a href="#" id="logout">Sair</a>
+
+    <!-- Botão hambúrguer -->
+    <div class="hamburger" onclick="toggleSidebarMobile()">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
+</div>
+
+<!-- Spinner de carregamento -->
+<div id="spinner-overlay">
+  <div class="spinner"></div>
 </div>

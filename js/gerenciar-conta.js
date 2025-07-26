@@ -1,84 +1,92 @@
-const URL_API = "https://script.google.com/macros/s/AKfycbzC8tQ3bTO2a69FyImqQu5WLF8Nj_y0xWzQ6oRURB1WlVHWX_bTVX-ENwvCBstEYsxE/exec";
+// js/gerenciar-conta.js
+import { API_URL } from './config.js';
+import { showSpinner, hideSpinner } from './spinner.js';
+import { showError, showSuccess } from './alertas.js';
 
-// Função para carregar dados do usuário
+const token = localStorage.getItem('token');
+
+/**
+ * Carrega os dados do usuário para o formulário
+ */
 async function carregarUsuario() {
-  const token = localStorage.getItem("token");
-  if (!token) return;
-
-  const nomeEl = document.getElementById("nome");
-  const emailEl = document.getElementById("email");
-  const topbarNome = document.getElementById("nome-usuario");
-
-  // Pré-preenche com dados locais
-  const nomeLocal = localStorage.getItem("nome_usuario");
-  const emailLocal = localStorage.getItem("email_usuario");
-
-  if (nomeLocal) {
-    nomeEl.value = nomeLocal;
-    if (topbarNome) topbarNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-  }
-  if (emailLocal) emailEl.value = emailLocal;
-
+  if (!token) return tokenInvalido();
+  showSpinner();
   try {
-    const resposta = await fetch(URL_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ action: "usuario", token })
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ action: 'usuario', token })
     });
-
-    const texto = await resposta.text();
-    if (texto.startsWith("{")) {
-      const dados = JSON.parse(texto);
-      nomeEl.value = dados.nome || "";
-      emailEl.value = dados.email || "";
-
-      localStorage.setItem("nome_usuario", dados.nome || "");
-      localStorage.setItem("email_usuario", dados.email || "");
-    } else {
-      console.warn("Erro ao carregar dados:", texto);
-    }
-  } catch (erro) {
-    console.error("Erro de rede ao carregar usuário:", erro);
+    const txt = await res.text();
+    if (txt === 'TOKEN_INVALIDO') return tokenInvalido();
+    if (!txt.startsWith('{')) throw new Error(txt);
+    const dados = JSON.parse(txt);
+    preencherCampos(dados);
+  } catch (e) {
+    console.error('Erro ao carregar usuário:', e);
+    showError('Erro', 'Falha ao carregar dados do usuário.');
+  } finally {
+    hideSpinner();
   }
 }
 
-// Função para atualizar o nome
+/**
+ * Preenche o formulário com nome e email
+ */
+function preencherCampos({ nome = '', email = '' }) {
+  document.getElementById('nome').value  = nome;
+  document.getElementById('email').value = email;
+  localStorage.setItem('nome_usuario', nome);
+  localStorage.setItem('email_usuario', email);
+  const spanNome = document.getElementById('nome-usuario');
+  if (spanNome) spanNome.innerHTML = `<strong>${nome}</strong>`;
+}
+
+/**
+ * Envia atualização do nome para a API
+ */
 async function atualizarNome() {
-  const token = localStorage.getItem("token");
-  const nome = document.getElementById("nome").value.trim();
+  const novo = document.getElementById('nome').value.trim();
+  if (!novo) return showError('Campo obrigatório', 'O nome não pode estar vazio.');
 
-  if (!nome) {
-    alert("O nome não pode estar vazio.");
-    return;
-  }
-
+  showSpinner();
   try {
-    const resposta = await fetch(URL_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ action: "atualizar_nome", token, nome })
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ action: 'atualizar_nome', token, nome: novo })
     });
-
-    const resultado = await resposta.text();
-    if (resultado === "OK") {
-      alert("Nome atualizado com sucesso!");
-      localStorage.setItem("nome_usuario", nome);
-    } else {
-      alert("Erro ao atualizar nome: " + resultado);
-    }
-  } catch (erro) {
-    console.error("Erro ao atualizar nome:", erro);
-    alert("Erro de rede ao atualizar nome.");
+    const txt = await res.text();
+    if (txt === 'TOKEN_INVALIDO') return tokenInvalido();
+    if (txt !== 'OK') throw new Error(txt);
+    localStorage.setItem('nome_usuario', novo);
+    preencherCampos({ nome: novo, email: document.getElementById('email').value });
+    showSuccess('Nome atualizado!', 'Seus dados foram salvos.');
+  } catch (e) {
+    console.error('Erro ao atualizar nome:', e);
+    showError('Erro', 'Falha ao atualizar o nome.');
+  } finally {
+    hideSpinner();
   }
 }
 
-// Event listeners
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Trata token inválido ou expirado
+ */
+function tokenInvalido() {
+  localStorage.clear();
+  showError('Sessão expirada', 'Faça login novamente.', () => {
+    window.location.href = '../../index.html';
+  });
+}
+
+/**
+ * Inicializa listeners após DOM pronto
+ */
+document.addEventListener('DOMContentLoaded', () => {
   carregarUsuario();
-
-  document.getElementById("btn-atualizar").addEventListener("click", atualizarNome);
-
-  document.getElementById("btn-alterar-senha").addEventListener("click", () => {
-    window.location.href = "../../pages/public/alterar-senha.html"; // Corrigido!
+  document.getElementById('btn-atualizar').addEventListener('click', atualizarNome);
+  document.getElementById('btn-alterar-senha').addEventListener('click', () => {
+    window.location.href = '../../pages/public/alterar-senha.html';
   });
 });

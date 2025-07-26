@@ -1,50 +1,61 @@
-// preenche nome do usuário
-const spanNome = document.getElementById('nome-usuario');
-const nomeLocal = localStorage.getItem('nome_usuario');
-if (spanNome && nomeLocal) {
-  spanNome.innerHTML = `<strong>${nomeLocal}</strong>`;
-}
+// assets/js/cadastro-usuarios.js
+import { showSuccess, showError } from './alertas.js';
+import { API_URL } from './config.js';
+import { hierarquia } from './perfis.js';
 
-// exibe/oculta menu
-function toggleMenu() {
-  const dd = document.getElementById('dropdown');
-  dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
-}
+// 1. Preenche nome na top-bar e carrega perfis compatíveis
+document.addEventListener('DOMContentLoaded', () => {
+  const span = document.getElementById('nome-usuario');
+  const nome = localStorage.getItem('nome_usuario');
+  if (span && nome) span.innerHTML = `<strong>${nome}</strong>`;
 
-// logout
-function logout() {
-  localStorage.clear();
-  window.location.href = '../../index.html';
-}
+  const select = document.getElementById('nivel');
+  const nivelAtual = localStorage.getItem('nivel');
+  const nivelMaximo = hierarquiaPerfis[nivelAtual] ?? 0;
 
-document.addEventListener('click', e => {
-  const um = document.querySelector('.user-menu'),
-        dd = document.getElementById('dropdown');
-  if (!um.contains(e.target)) dd.style.display = 'none';
+  Object.entries(hierarquiaPerfis).forEach(([perfil, ordem]) => {
+    if (ordem <= nivelMaximo) {
+      const opt = document.createElement('option');
+      opt.value = perfil;
+      opt.textContent = perfil;
+      select.appendChild(opt);
+    }
+  });
 });
 
-// hierarquia de perfis
-(function(){
-  const hierarquia = { BASICO:1, INTERMEDIARIO:2, AVANCADO:3, MASTER:4 };
-  const nivelAtual = localStorage.getItem('nivel');
-  const select = document.getElementById('nivel');
-  if (nivelAtual && select) {
-    const max = hierarquia[nivelAtual] || 0;
-    for (let i = select.options.length - 1; i >= 0; i--) {
-      const opt = select.options[i];
-      if (opt.value && hierarquia[opt.value] > max) {
-        select.remove(i);
-      }
-    }
-  }
-})();
-
-// envio do formulário
-document.getElementById('frmCadastroUsuarios')
-  .addEventListener('submit', async e => {
+// 2. Cadastro
+document
+  .getElementById('frmCadastroUsuarios')
+  .addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = e.target.email.value;
+    const email = e.target.email.value.trim();
     const nivel = e.target.nivel.value;
-    // aqui você chamaria o Apps Script via fetch...
-    alert(`Simulado: Cadastrou ${email} como ${nivel}`);
+
+    if (!email || !nivel) {
+      showError('Campos vazios', 'Preencha e-mail e nível.');
+      return;
+    }
+
+    const fd = new FormData(e.target);
+    fd.append('action', 'novo');
+
+    try {
+      const res = await fetch(API_URL, { method: 'POST', body: fd });
+      const txt = await res.text();
+
+      if (txt === 'OK') {
+        showSuccess(
+          'Usuário cadastrado!',
+          `Usuário ${email} foi criado com perfil de acesso ${nivel}.`,
+          () => e.target.reset()               // callback: limpa formulário
+        );
+      } else if (txt === 'JA_EXISTE') {
+        showError('Já existe', 'Este e-mail já está cadastrado.');
+      } else {
+        showError('Erro', txt.replace(/_/g, ' '));
+      }
+    } catch (err) {
+      console.error(err);
+      showError('Erro de rede', 'Não foi possível contatar o servidor.');
+    }
   });

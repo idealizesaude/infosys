@@ -2,7 +2,8 @@
   --azul: #38b6ff;
   --rosa: #eb0d9f;
   --cinza-claro: #f9f9f9;
-  --cinza-borda: #ccc;
+  --cinza-texto: #333;
+  --branco: #ffffff;
 }
 
 * {
@@ -16,18 +17,16 @@ body {
   background: var(--cinza-claro);
 }
 
-/* Espaço reservado para header fixo + sidebar */
 .main-content {
-  margin-left: 250px;   /* largura do sidebar */
-  margin-top: 60px;     /* altura do header */
+  margin-left: 250px;
+  margin-top: 60px;
   padding: 2rem;
 }
 
-/* Container centralizado */
 .main-content .container {
   max-width: 800px;
   margin: 0 auto;
-  background: #fff;
+  background: var(--branco);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -39,12 +38,6 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.placeholder {
-  font-style: italic;
-  color: #555;
-}
-
-/* Responsividade */
 @media (max-width: 600px) {
   .main-content {
     margin-left: 0;

@@ -5,30 +5,56 @@
   --cinza-texto: #333;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
   background: var(--cinza-claro);
 }
 
-.container {
-  max-width: 1000px;
-  margin: 100px auto 2rem;
-  background: white;
-  border-radius: 8px;
+/* ------------------------------------------------------------
+   Espaço reservado para header fixo + sidebar
+   ------------------------------------------------------------ */
+.main-content {
+  margin-left: 250px;   /* largura do sidebar */
+  margin-top: 60px;     /* altura do header */
   padding: 2rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+/* ------------------------------------------------------------
+   Container centralizado dentro de .main-content
+   ------------------------------------------------------------ */
+.main-content .container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ------------------------------------------------------------
+   Título da página
+   ------------------------------------------------------------ */
 .container h2 {
   color: var(--azul);
   margin-bottom: 1.5rem;
 }
 
-table {
+/* ------------------------------------------------------------
+   Wrapper para scroll horizontal da tabela
+   ------------------------------------------------------------ */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table-wrapper table {
   width: 100%;
+  min-width: 600px; /* assegura que as colunas não encolham demais */
   border-collapse: collapse;
 }
 
@@ -43,21 +69,15 @@ th {
   color: var(--cinza-texto);
 }
 
-.acoes span {
-  display: inline-block;
-  margin-right: 10px;
-  padding: 4px 8px;
-  background-color: #eee;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
+/* ------------------------------------------------------------
+   Modais
+   ------------------------------------------------------------ */
 .modal {
   display: none;
   position: fixed;
   top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
@@ -65,7 +85,7 @@ th {
 }
 
 .modal-content {
-  background: white;
+  background: #fff;
   padding: 2rem;
   border-radius: 8px;
   width: 340px;
@@ -105,11 +125,11 @@ th {
 }
 
 .cancelar { background-color: #ccc; }
-.salvar   { background-color: var(--azul); color: white; }
+.salvar   { background-color: var(--azul); color: #fff; }
 
 button.fechar {
   background-color: var(--azul);
-  color: white;
+  color: #fff;
   font-weight: bold;
   padding: 0.5rem 1rem;
   border: none;
@@ -121,4 +141,31 @@ button.fechar {
 
 button.fechar:hover {
   background-color: #2a94cc;
+}
+
+/* ------------------------------------------------------------
+   Ajustes para telas pequenas
+   ------------------------------------------------------------ */
+@media (max-width: 600px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .main-content .container {
+    margin: 0;
+    padding: 1rem;
+  }
+
+  .container h2 {
+    font-size: 1.25rem;
+  }
+
+  .table-wrapper table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 0.5rem;
+  }
 }
